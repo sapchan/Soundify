@@ -12,7 +12,18 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      norm: 'place'
+      norm: 'place',
+      name: 'Somebody',
+      playlist: [
+        'P1',
+        'P2'
+      ],
+      friends: ['F1','F2'],
+      queue: [
+        'S1',
+        'S2'
+      ],
+      curSong: ['S3']
     };
   }
 
@@ -28,28 +39,17 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps){
-    axios.get('http://localhost:4567/test')
-    .then(function (response) {
-      const message = response.data;
-      console.log(message);
-    }.bind(this))
+
   }
 
   render() {
-    const data =[{
-      "name":"Somebody",
-       "playlist": "hello",
-       "friends": "fuck 1",
-       "queue": "shitty song 2"
-    }];
-    console.log(data);
     return (
       <div className="App">
-        <h2>Hello {data.name}</h2>
-        <PlayList_Container data={data}/>
-        <Viewer_Container data={data}/>
-        <Player_Container data={data}/>
-        <BeSocial_Container data={data}/>
+        <h2>Hello {this.state.name}</h2>
+        <PlayList_Container data={this.state.playlist}/>
+        <Viewer_Container data={this.state.queue}/>
+        <Player_Container data={this.state.curSong}/>
+        <BeSocial_Container data={this.state.friends}/>
 
       </div>
     );

@@ -1,27 +1,29 @@
 import React, { Component } from 'react';
 
-class PlaylistItem_Component extends Component {
+class Viewer_Queue_Component extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: undefined
+      song: undefined
     };
   }
 
   componentWillMount(){
-    let data = this.props.name;
+    let data = this.props.song;
     console.log(data);
-    this.setState({ data });
+    this.setState({
+      song: data
+    });
   }
 
   render() {
     return (
       <div className="playlist_item">
-        {this.props.name}
+        {this.state.song}
       </div>
     );
   }
 
 }
 
-export default PlaylistItem_Component;
+export default Viewer_Queue_Component;

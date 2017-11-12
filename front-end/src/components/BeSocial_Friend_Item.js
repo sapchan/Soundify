@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class PlaylistItem_Component extends Component {
+class BeSocial_Friend_Item extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,7 +16,7 @@ class PlaylistItem_Component extends Component {
 
   render() {
     return (
-      <div className="playlist_item">
+      <div className="friend">
         {this.props.name}
       </div>
     );
@@ -24,4 +24,4 @@ class PlaylistItem_Component extends Component {
 
 }
 
-export default PlaylistItem_Component;
+export default BeSocial_Friend_Item;

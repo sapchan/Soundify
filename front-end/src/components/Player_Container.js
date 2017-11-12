@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 
 class Player_Container extends Component {
@@ -10,7 +9,7 @@ class Player_Container extends Component {
   render() {
     return (
       <div className="Player_Container">
-        {this.props.data.queue}
+        <p>Your current song: {this.props.data}</p>
       </div>
     );
   }

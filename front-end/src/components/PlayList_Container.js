@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import PlaylistItem_Component from './PlaylistItem_Component';
 
 
@@ -13,6 +12,7 @@ class PlayList_Container extends Component {
 
   componentWillMount(){
     let data = this.props.data;
+    console.log(data);
     this.setState({ data });
   }
 
@@ -22,7 +22,9 @@ class PlayList_Container extends Component {
       <div className="PlayList_Container">
         <p>Your Playlists</p>
         <div>
-          {this.props.data.playlist}
+          {this.state.data.map(function(d, i){
+            return (<PlaylistItem_Component key={i} name={d} />)
+          })}
         </div>
 
       </div>
