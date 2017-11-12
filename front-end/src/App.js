@@ -6,6 +6,8 @@ import Viewer_Container from './components/Viewer_Container';
 import Player_Container from './components/Player_Container';
 import BeSocial_Container from './components/BeSocial_Container';
 
+import { Grid, Button, Row, Col, Panel } from 'react-bootstrap';
+
 
 class App extends Component {
 
@@ -45,12 +47,24 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h2>Hello {this.state.name}</h2>
-        <PlayList_Container data={this.state.playlist}/>
-        <Viewer_Container data={this.state.queue}/>
-        <Player_Container data={this.state.curSong}/>
-        <BeSocial_Container data={this.state.friends}/>
-
+        <Grid>
+          <Row>
+            <Col md={3}>
+              <PlayList_Container data={this.state.playlist} name={this.state.name}/>
+            </Col>
+            <Col md={6}>
+              <Row>
+                <Viewer_Container data={this.state.queue}/>
+              </Row>
+              <Row>
+                <Player_Container data={this.state.curSong}/>
+              </Row>
+            </Col>
+            <Col md={3}>
+              <BeSocial_Container data={this.state.friends}/>
+            </Col>
+          </Row>
+        </Grid>
       </div>
     );
   }

@@ -6,23 +6,29 @@ class PlayList_Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: undefined
+      playlists: undefined,
+      name: undefined
     };
   }
 
   componentWillMount(){
     let data = this.props.data;
+    let name = this.props.name;
     console.log(data);
-    this.setState({ data });
+    this.setState({
+      playlists: data,
+      name: name
+    });
   }
 
   render() {
     const data = this.props.data;
     return (
       <div className="PlayList_Container">
+        <h3>Hello, {this.state.name}</h3>
         <p>Your Playlists</p>
         <div>
-          {this.state.data.map(function(d, i){
+          {this.state.playlists.map(function(d, i){
             return (<PlaylistItem_Component key={i} name={d} />)
           })}
         </div>
