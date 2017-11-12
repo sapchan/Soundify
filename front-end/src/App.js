@@ -22,8 +22,16 @@ class App extends Component {
       ],
       friends: ['F1','F2'],
       queue: [
-        'S1',
-        'S2'
+        [
+          'Hello',
+          'AILL',
+          'feb 30th'
+        ],
+        [
+          'Cant Repair',
+          'Cindy Trump Pan',
+          'feb 31st'
+        ]
       ],
       curSong: ['S3']
     };
@@ -36,7 +44,6 @@ class App extends Component {
       this.setState(
         {norm: message}
       );
-      console.log(message);
     }.bind(this))
   }
 
@@ -45,24 +52,42 @@ class App extends Component {
   }
 
   render() {
+    const Viewer_window = {
+      position: 'relative',
+      width: '100%',
+      height: '90%'
+    }
+
+    const Player_window = {
+      position: 'fixed',
+      bottom: '10%'
+    }
+
     return (
       <div className="App">
         <Grid>
           <Row>
+
             <Col md={3}>
               <PlayList_Container data={this.state.playlist} name={this.state.name}/>
             </Col>
-            <Col md={6}>
-              <Row>
+
+            <Col md={7}>
+              <Row style={Viewer_window}>
                 <Viewer_Container data={this.state.queue}/>
               </Row>
-              <Row>
+              <Row style={Player_window}>
                 <Player_Container data={this.state.curSong}/>
               </Row>
             </Col>
-            <Col md={3}>
+
+
+
+            <Col md={2}>
               <BeSocial_Container data={this.state.friends}/>
             </Col>
+
+
           </Row>
         </Grid>
       </div>

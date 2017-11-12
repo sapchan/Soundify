@@ -10,7 +10,6 @@ class PlaylistItem_Component extends Component {
 
   componentWillMount(){
     let data = this.props.name;
-    console.log(data);
     this.setState({ data });
   }
 

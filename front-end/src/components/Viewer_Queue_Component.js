@@ -1,25 +1,39 @@
 import React, { Component } from 'react';
+import { Grid, Button, Row, Col, Panel } from 'react-bootstrap';
 
 class Viewer_Queue_Component extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      song: undefined
+      songName: undefined,
+      artist: undefined,
+      createDate: undefined
     };
   }
 
   componentWillMount(){
-    let data = this.props.song;
-    console.log(data);
+    let songName = this.props.song;
+    let artist = this.props.artist;
+    let date = this.props.createDate;
     this.setState({
-      song: data
+      songName: songName,
+      artist: artist,
+      createDate: date
     });
   }
 
   render() {
     return (
       <div className="playlist_item">
-        {this.state.song}
+            <Col md={4}>
+              {this.state.songName}
+            </Col>
+            <Col md={4}>
+              {this.state.artist}
+            </Col>
+            <Col md={4}>
+              {this.state.createDate}
+            </Col>
       </div>
     );
   }

@@ -10,7 +10,6 @@ class BeSocial_Friend_Item extends Component {
 
   componentWillMount(){
     let data = this.props.name;
-    console.log(data);
     this.setState({ data });
   }
 

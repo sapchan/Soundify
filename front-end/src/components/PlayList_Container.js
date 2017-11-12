@@ -14,7 +14,6 @@ class PlayList_Container extends Component {
   componentWillMount(){
     let data = this.props.data;
     let name = this.props.name;
-    console.log(data);
     this.setState({
       playlists: data,
       name: name

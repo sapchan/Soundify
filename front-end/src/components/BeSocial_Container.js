@@ -11,7 +11,6 @@ class BeSocial_Container extends Component {
 
   componentWillMount(){
     let data = this.props.data;
-    console.log(data);
     this.setState({ data });
   }
   render() {
