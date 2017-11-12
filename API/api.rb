@@ -4,7 +4,7 @@ require 'sinatra'
 
 get '/test' do
 	response['Access-Control-Allow-Origin'] = '*'
-	'test'
+	'yo'
 end
 
 get '/playlist/#pl_id' do
