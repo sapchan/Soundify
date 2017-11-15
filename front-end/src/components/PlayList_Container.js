@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PlaylistItem_Component from './PlaylistItem_Component';
-
+import { Grid, Button, Row, Col, Panel } from 'react-bootstrap';
 
 class PlayList_Container extends Component {
   constructor(props) {
     super(props);
+    this.send_PlayList_id_Up = this.send_PlayList_id_Up.bind(this);
     this.state = {
       playlists: undefined,
       name: undefined
@@ -19,6 +20,10 @@ class PlayList_Container extends Component {
       name: name
     });
   }
+  
+  send_PlayList_id_Up(playlist_key){
+    this.props.get_event(playlist_key);
+  }
 
   render() {
     const data = this.props.data;
@@ -28,8 +33,12 @@ class PlayList_Container extends Component {
         <p>Your Playlists</p>
         <div>
           {this.state.playlists.map(function(d, i){
-            return (<PlaylistItem_Component key={i} name={d} />)
-          })}
+            return (<PlaylistItem_Component 
+              key={i} 
+              data={d}
+              onPlayListClick={this.send_PlayList_id_Up}
+              />)
+          }.bind(this))}
         </div>
 
       </div>

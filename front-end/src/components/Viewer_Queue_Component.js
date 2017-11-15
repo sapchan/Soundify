@@ -21,6 +21,17 @@ class Viewer_Queue_Component extends Component {
       createDate: date
     });
   }
+  
+  componentWillReceiveProps(nextProps) {
+    if(this.props.song != nextProps.song || this.props.artist != nextProps.artist ||
+       this.props.createDate != nextProps.createDate)  {
+      this.setState({
+        songName: nextProps.song,
+        artist: nextProps.artist,
+        createDate: nextProps.createDate
+      })
+    }
+  }
 
   render() {
     return (

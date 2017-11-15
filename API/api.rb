@@ -1,13 +1,14 @@
 # api.rb
-
 require 'sinatra'
 
+before do
+	response.headers['Access-Control-Allow-Origin'] = '*'
+end
+
 get '/test' do
-	response['Access-Control-Allow-Origin'] = '*'
 	'yo'
 end
 
-get '/playlist/#pl_id' do
-	response['Access-Control-Allow-Origin'] = '*'
-	
+get '/playlist/:pl_id' do
+	"hello #{params['pl_id']}!"
 end

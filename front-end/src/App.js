@@ -10,15 +10,14 @@ import { Grid, Button, Row, Col, Panel } from 'react-bootstrap';
 
 
 class App extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       norm: 'place',
       name: 'Somebody',
       playlist: [
-        'P1',
-        'P2'
+        ['P1','123'],
+        ['P2','132']
       ],
       friends: ['F1','F2'],
       queue: [
@@ -33,8 +32,10 @@ class App extends Component {
           'feb 31st'
         ]
       ],
+      queueView: true,
       curSong: ['S3']
     };
+    this.get_PlayList_Id_From_Container = this.get_PlayList_Id_From_Container.bind(this);
   }
 
   componentWillMount() {
@@ -49,6 +50,51 @@ class App extends Component {
 
   componentWillReceiveProps(nextProps){
 
+  }
+
+  get_PlayList_Id_From_Container(playList_id) {
+    let queue = undefined;
+    if(playList_id == '123') {
+      queue = [
+            [
+              'Hello',
+              'I',
+              'just'
+            ],
+            [
+              'met',
+              'you',
+              'and'
+            ]
+          ];
+    } else {
+      queue = [
+            [
+              'Fuck',
+              'my',
+              'life'
+            ],
+            [
+              'This',
+              'shit',
+              'works'
+            ]
+          ];
+    }
+    let location = 'http://localhost:4567/playlist/' + playList_id;
+    axios.get(location).then(function (response) {
+      const can = response.data;
+      console.log(can);
+      this.setState({
+        queue: queue
+      });
+    }.bind(this));
+  }
+  
+  changeViewerState(queue){
+    this.setState({
+      queue: queue
+    });
   }
 
   render() {
@@ -67,27 +113,29 @@ class App extends Component {
       <div className="App">
         <Grid>
           <Row>
-
             <Col md={3}>
-              <PlayList_Container data={this.state.playlist} name={this.state.name}/>
+              <PlayList_Container 
+              data={this.state.playlist} 
+              name={this.state.name}
+              get_event={this.get_PlayList_Id_From_Container}
+              />
             </Col>
-
             <Col md={7}>
               <Row style={Viewer_window}>
-                <Viewer_Container data={this.state.queue}/>
+              
+                <Viewer_Container 
+                  playerView = {this.state.queueView}
+                  data={this.state.queue}
+                />
+                  
               </Row>
               <Row style={Player_window}>
                 <Player_Container data={this.state.curSong}/>
               </Row>
             </Col>
-
-
-
             <Col md={2}>
               <BeSocial_Container data={this.state.friends}/>
             </Col>
-
-
           </Row>
         </Grid>
       </div>
