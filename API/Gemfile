@@ -1,4 +1,6 @@
 #Gemfile
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
-gem "sinatra"
+gem 'sinatra'
+gem 'sequel'
+gem 'mysql2'
