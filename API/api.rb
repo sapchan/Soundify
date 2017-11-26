@@ -20,6 +20,10 @@ get '/playlist/:pl_id' do
 		JSON.generate(playlist)
 end
 
+get '/getListPlaylist/:usr_id' do
+	#get all the playlists for a specific user
+end
+
 get '/queue' do
 
 	queue = {
@@ -42,9 +46,11 @@ get '/queue' do
 
 end
 
-get '/initialize' do
+get '/initialize/:usr_id' do
+	#This needs to get all of the information about a specific user based on the user id
 	initialInformation = {
 		'name' => 'testDummy',
+		'usr_id' => 0
 		'playlist' => [
 			{
 				'playlistName' => 'playlist 1',
