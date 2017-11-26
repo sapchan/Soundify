@@ -1,0 +1,25 @@
+.Viewer_Container {
+  height: 90vh;
+}
+
+.Viewer_Queue {
+  padding-top:2vh;
+  
+}
+
+.playlist_item {
+  border-radius: 0 !important;
+}
+
+.SearchBar {
+  padding-top:2vh;
+}
+
+.PlayList_Container {
+  /** background-color: #40ABA6; **/
+  height:90vh;
+}
+
+body {
+  /**background-color: #45B8B3; **/
+}

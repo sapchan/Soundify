@@ -10,6 +10,7 @@ class PlayList_Container extends Component {
       playlists: undefined,
       name: undefined
     };
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentWillMount(){
@@ -20,25 +21,33 @@ class PlayList_Container extends Component {
       name: name
     });
   }
-  
+
   send_PlayList_id_Up(playlist_key){
-    this.props.get_event(playlist_key);
+    this.props.callback(playlist_key);
+  }
+
+  handleClick() {
+    this.props.getQueue();
   }
 
   render() {
     const data = this.props.data;
     return (
       <div className="PlayList_Container">
-        <h3>Hello, {this.state.name}</h3>
+        <h3>Hello, {this.props.name}</h3>
+        <hr></hr>
         <p>Your Playlists</p>
         <div>
           {this.state.playlists.map(function(d, i){
-            return (<PlaylistItem_Component 
-              key={i} 
-              data={d}
+            return (<PlaylistItem_Component
+              playlistId={d['playlist_id']}
+              playListName = {d['playlistName']}
               onPlayListClick={this.send_PlayList_id_Up}
               />)
           }.bind(this))}
+          <a onClick={this.handleClick} className="playlist_item">
+            Queue
+          </a>
         </div>
 
       </div>

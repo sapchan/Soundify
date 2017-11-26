@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Button, Row, Col, Panel } from 'react-bootstrap';
+import { Grid, Button, Row, Col, Panel, tr, td } from 'react-bootstrap';
 
 class Viewer_Queue_Component extends Component {
   constructor(props) {
@@ -7,47 +7,56 @@ class Viewer_Queue_Component extends Component {
     this.state = {
       songName: undefined,
       artist: undefined,
-      createDate: undefined
+      duration: undefined,
+      songID: undefined
     };
+    this.handleClick = this.handleClick.bind(this)
   }
 
   componentWillMount(){
     let songName = this.props.song;
     let artist = this.props.artist;
-    let date = this.props.createDate;
+    let duration = this.props.duration;
+    let songID = this.props.songID;
     this.setState({
       songName: songName,
       artist: artist,
-      createDate: date
+      duration: duration,
+      songID: songID
     });
   }
-  
+
   componentWillReceiveProps(nextProps) {
-    if(this.props.song != nextProps.song || this.props.artist != nextProps.artist ||
-       this.props.createDate != nextProps.createDate)  {
+    if(this.props.song !== nextProps.song ||
+       this.props.artist !== nextProps.artist ||
+       this.props.duration !== nextProps.duration ||
+       this.props.songID !== nextProps.songID)  {
       this.setState({
         songName: nextProps.song,
         artist: nextProps.artist,
-        createDate: nextProps.createDate
+        duration: nextProps.duration,
+        songID: nextProps.songID
       })
     }
   }
 
-  render() {
-    return (
-      <div className="playlist_item">
-            <Col md={4}>
-              {this.state.songName}
-            </Col>
-            <Col md={4}>
-              {this.state.artist}
-            </Col>
-            <Col md={4}>
-              {this.state.createDate}
-            </Col>
-      </div>
-    );
+  handleClick(){
+    this.props.callback(this.state.songID);
   }
+
+  render() {
+      return (
+          <tr>
+             <td>{this.state.songID}</td>
+             <td>{this.state.songName}</td>
+             <td>{this.state.artist} </td>
+             <td>{this.state.duration}</td>
+             <td><Button onClick={this.handleClick}>
+               play
+             </Button></td>
+          </tr>
+      );
+    }
 
 }
 

@@ -13,13 +13,14 @@ class PlaylistItem_Component extends Component {
   }
 
   componentWillMount(){
-    let data = this.props.data;
-    this.setState({ 
-    title: data[0],
-    key: data[1]
+    let name = this.props.playListName;
+    let playlistId = this.props.playlistId;
+    this.setState({
+    title: name,
+    key: playlistId
      });
   }
-  
+
   handleClick() {
     this.props.onPlayListClick(this.state.key);
   }
@@ -28,9 +29,9 @@ class PlaylistItem_Component extends Component {
     return (
       <Grid>
         <Row>
-          <Button onClick={this.handleClick} className="playlist_item">
+          <a onClick={this.handleClick} className="playlist_item">
             {this.state.title}
-          </Button>
+          </a>
         </Row>
       </Grid>
     );

@@ -16,10 +16,10 @@ class BeSocial_Container extends Component {
   render() {
     return (
       <div className="BeSocial_Container">
-        <p>Your Friends</p>
+        <h3>Friends</h3>
         <div>
           {this.state.data.map(function(d, i){
-            return (<BeSocial_Friend_Item key={i} name={d} />)
+            return (<BeSocial_Friend_Item key={d['friend_id']} name={d['friend_name']} />)
           })}
         </div>
       </div>
