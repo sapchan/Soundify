@@ -1,14 +1,14 @@
 CREATE TABLE `Artist` (
-  `ar_id` int(25) unsigned NOT NULL,
+  `ar_id` varchar(36) unsigned NOT NULL,
   `name` varchar(60) NOT NULL DEFAULT '',
   `description` longtext,
   PRIMARY KEY (`ar_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Album` (
-  `al_id` int(25) unsigned NOT NULL,
+  `al_id` varchar(36) unsigned NOT NULL,
   `title` varchar(60) NOT NULL DEFAULT '',
-  `ar_id` int(25) unsigned NOT NULL,
+  `ar_id` varchar(36) unsigned NOT NULL,
   `date` year(4) DEFAULT NULL,
   PRIMARY KEY (`al_id`),
   KEY `Album-Artist` (`ar_id`),
@@ -16,15 +16,15 @@ CREATE TABLE `Album` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `User` (
-  `us_id` int(25) unsigned NOT NULL,
+  `us_id` varchar(36) unsigned NOT NULL,
   `username` varchar(25) NOT NULL DEFAULT '',
   `password` varchar(25) NOT NULL DEFAULT '',
   PRIMARY KEY (`us_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Following` (
-  `follower` int(25) unsigned NOT NULL,
-  `followed` int(25) unsigned NOT NULL,
+  `follower` varchar(36) unsigned NOT NULL,
+  `followed` varchar(36) unsigned NOT NULL,
   PRIMARY KEY (`follower`,`followed`),
   KEY `Followed-User` (`followed`),
   CONSTRAINT `Followed-User` FOREIGN KEY (`followed`) REFERENCES `User` (`us_id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -32,8 +32,8 @@ CREATE TABLE `Following` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Playlist` (
-  `pl_id` int(25) unsigned NOT NULL,
-  `us_id` int(25) unsigned NOT NULL,
+  `pl_id` varchar(36) unsigned NOT NULL,
+  `us_id` varchar(36) unsigned NOT NULL,
   `name` varchar(25) NOT NULL DEFAULT '',
   PRIMARY KEY (`pl_id`),
   KEY `Playlist-User` (`us_id`),
@@ -41,10 +41,10 @@ CREATE TABLE `Playlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Song` (
-  `so_id` int(25) unsigned NOT NULL,
+  `so_id` varchar(36) unsigned NOT NULL,
   `title` varchar(60) NOT NULL DEFAULT '',
-  `ar_id` int(25) unsigned NOT NULL,
-  `al_id` int(25) unsigned NOT NULL,
+  `ar_id` varchar(36) unsigned NOT NULL,
+  `al_id` varchar(36) unsigned NOT NULL,
   `popularity` float DEFAULT NULL,
   `link` text NOT NULL,
   `genre` varchar(25) NOT NULL DEFAULT 'Unknown',
@@ -55,8 +55,8 @@ CREATE TABLE `Song` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PlaylistSong` (
-  `pl_id` int(25) unsigned NOT NULL,
-  `so_id` int(25) unsigned NOT NULL,
+  `pl_id` varchar(36) unsigned NOT NULL,
+  `so_id` varchar(36) unsigned NOT NULL,
   PRIMARY KEY (`pl_id`,`so_id`),
   KEY `PlaylistSong-Song` (`so_id`),
   CONSTRAINT `PlaylistSong-Playlist` FOREIGN KEY (`pl_id`) REFERENCES `Playlist` (`pl_id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -64,8 +64,8 @@ CREATE TABLE `PlaylistSong` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Queue` (
-  `us_id` int(25) unsigned NOT NULL,
-  `so_id` int(25) unsigned NOT NULL,
+  `us_id` varchar(36) unsigned NOT NULL,
+  `so_id` varchar(36) unsigned NOT NULL,
   `position` int(11) NOT NULL,
   PRIMARY KEY (`us_id`,`so_id`,`position`),
   KEY `Queue-Song` (`so_id`),
