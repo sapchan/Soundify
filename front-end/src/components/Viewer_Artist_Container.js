@@ -43,9 +43,10 @@ class Viewer_Artist_Container extends Component {
   render() {
       return (
             <div>
+            <Grid fluid={true}>
               <h3>{this.state.artist_name}</h3>
               <hr></hr>
-
+            </Grid>
             </div>
       );
   }

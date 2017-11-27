@@ -63,6 +63,7 @@ get '/getListPlaylist/:usr_id' do
 	JSON[playlist]
 end
 
+#get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
 get '/getArtistInformation/:ar_id' do
 	if params['ar_id'] == '12'
 		artist_info = {
@@ -102,7 +103,24 @@ get '/getArtistInformation/:ar_id' do
 		}
 		JSON[artist_info]
 	else
-
+		artist_info = {
+			'artist_info':[
+				{
+			      'Name'=> 'NA',
+			      'artist_id' => 0,
+			      'Description'=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
+			      'Albums'=> [
+			        {
+			          'album_title' => 'No Albums Available',
+			          'songs' => [{
+			              'songName' => 'No Songs Available',
+			              'song_key' => 0,
+			              'duration' => 0
+			              }]
+			          }]
+			    }]
+		}
+		JSON[artist_info]
 	end
 end
 
@@ -193,7 +211,6 @@ get '/initialize/:usr_id' do
 		              }]
 		          }]
 		    }]
-		}
 	}
 	JSON[initialInformation]
 end

@@ -141,6 +141,9 @@ class App extends Component {
         queue: queue
       });
     }.bind(this));
+    if(this.state.queueView != true) {
+      this.changeToPlaylist();
+    }
   }
 
   // When an artist is clicked on, the artist view should be triggered
