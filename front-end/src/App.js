@@ -54,6 +54,21 @@ class App extends Component {
           "song_key": 2,
         }
       ],
+      artist_info: [
+          {
+            'Name': 'name',
+            'artist_id' : 0,
+            'Description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
+            'Albums': [
+              {
+                'album_title': 'album 1',
+                'songs': [{
+                    'songName': 'Song 1',
+                    'song_key': 0,
+                    'duration': 0
+                    }]
+                }]
+          }],
       queueView: true,
       friendView: false,
       artistView: false,
@@ -67,6 +82,7 @@ class App extends Component {
     this.addFriend = this.addFriend.bind(this);
     this.getFriendPlaylist = this.getFriendPlaylist.bind(this);
     this.viewFriendsSongsInPlaylist = this.viewFriendsSongsInPlaylist.bind(this);
+    this.getArtistInformation = this.getArtistInformation.bind(this);
   }
 
   // This initializes all of the information when a user logs in based on what their user id is.
@@ -80,7 +96,7 @@ class App extends Component {
       let playlist = information[0]['playlist'];
       let friends = information[0]['friends'];
       let queue = information[0]['queue'];
-      console.log(friends);
+      let artist_info = information[0]['artist_info'];
       this.setState({
         name: name,
         user_id: user_id,
@@ -125,6 +141,20 @@ class App extends Component {
         queue: queue
       });
     }.bind(this));
+  }
+
+  // When an artist is clicked on, the artist view should be triggered
+  getArtistInformation(artist_id){
+    let location = 'http://localhost:4567/getArtistInformation/' + artist_id;
+    axios.get(location).then(function (response) {
+      let artist_info = response.data.artistInfo;
+      this.setState({
+        artist_info: artist_info
+      });
+    }.bind(this));
+    if(this.state.artistView != true) {
+      this.changeToArtist();
+    }
   }
 
   // When a song's play button is clicked, this method updates the song id that
@@ -232,9 +262,11 @@ class App extends Component {
                   friendView = {this.state.friendView}
                   artistView = {this.state.artistView}
                   data={this.state.queue}
+                  artist_info = {this.state.artist_info}
                   friends_playlist = {this.state.friends_playlist}
                   update={this.update_player_with_song}
                   viewSongs={this.viewFriendsSongsInPlaylist}
+                  onArtistClick={this.getArtistInformation}
                 />
             </Col>
             <Col md={1}>

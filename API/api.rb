@@ -12,11 +12,11 @@ end
 #get all songs in playlist pl_id
 get '/playlist/:pl_id' do
     if params['pl_id'] == '123'
-			playlist = [{:title => 'Capsize', :artist => 'FRENSHIP', :duration => 237, :song_key => 123},{:title => '1000 Nights', :artist => 'FRENSHIP', :duration => 164, :song_key => 567}];
+			playlist = [{:title => 'Capsize', :artist => 'FRENSHIP', :artist_id => 12, :duration => 237, :song_key => 123},{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
 		elsif params['pl_id'] == '132'
-			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :duration => 164, :song_key => 567}];
+			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
 		else
-			playlist = [{:title => 'NA', :artist => 'NA', :duration => 0, :song_key => 0}]
+			playlist = [{:title => 'NA', :artist => 'NA', :artist_id => 0, :duration => 0, :song_key => 0}]
 		end
 		JSON.generate(playlist)
 end
@@ -63,6 +63,49 @@ get '/getListPlaylist/:usr_id' do
 	JSON[playlist]
 end
 
+get '/getArtistInformation/:ar_id' do
+	if params['ar_id'] == '12'
+		artist_info = {
+			'artistInfo': [
+				{
+					'Name'=> 'FRENSHIP',
+					'artist_id' => 12,
+					'Description'=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
+					'Albums'=> [
+						{
+							'album_title' => 'album 1',
+							'songs' => [{
+									'songName' => 'Capsize',
+									'song_key' => 123,
+									'duration' => 237
+									},
+									{
+										'songName' => '1000 Nights',
+										'song_key' => 567,
+										'duration' => 164
+									}],
+							},
+							{
+							'album_title' => 'album 2',
+							'songs' => [{
+									'songName' => 'Song a',
+									'song_key' => 1,
+									'duration' => 2
+									},
+									{
+										'songName' => 'Song b',
+										'song_key' => 2,
+										'duration' => 164
+								}]
+							}]
+				}]
+		}
+		JSON[artist_info]
+	else
+
+	end
+end
+
 #get the list of all of usr_id's friends
 get '/getListFriends/:usr_id' do
 	#get all the friends for a specific user
@@ -76,12 +119,14 @@ get '/queue' do
 			{
 				'title'=> 'Song 1',
 				'artist'=> 'Creator 1',
+				'artist_id' => 890,
 				'duration'=> 132,
 				'song_key'=> 1
 			},
 			{
 				'title'=> 'Song 2',
 				'artist'=> 'Creator 2',
+				'artist_id' => 950,
 				'duration'=> 273,
 				'song_key'=> 2,
 			}
@@ -121,20 +166,36 @@ get '/initialize/:usr_id' do
 			{
 				'title'=> 'Song 1',
 				'artist'=> 'Creator 1',
+				'artist_id' => 890,
 				'duration'=> 132,
 				'song_key'=> 1
 			},
 			{
 				'title'=> 'Song 2',
 				'artist'=> 'Creator 2',
+				'artist_id' => 950,
 				'duration'=> 273,
 				'song_key'=> 2,
 			}
-		]
+		],
+		'artist_info':[
+			{
+		      'Name'=> 'name',
+		      'artist_id' => 0,
+		      'Description'=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
+		      'Albums'=> [
+		        {
+		          'album_title' => 'album 1',
+		          'songs' => [{
+		              'songName' => 'Song 1',
+		              'song_key' => 0,
+		              'duration' => 0
+		              }]
+		          }]
+		    }]
+		}
 	}
 	JSON[initialInformation]
-
-
 end
 
 # add a friend to user's list of friends based on usr_id

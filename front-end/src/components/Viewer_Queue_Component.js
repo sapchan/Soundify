@@ -8,13 +8,16 @@ class Viewer_Queue_Component extends Component {
       songName: undefined,
       artist: undefined,
       duration: undefined,
-      songID: undefined
+      songID: undefined,
+      artist_id: undefined
     };
-    this.handleClick = this.handleClick.bind(this)
+    this.handleClick = this.handleClick.bind(this);
+    this.handleArtistClick = this.handleArtistClick.bind(this);
   }
 
   componentWillMount(){
     let songName = this.props.song;
+    let artist_id = this.props.artist_id;
     let artist = this.props.artist;
     let duration = this.props.duration;
     let songID = this.props.songID;
@@ -22,7 +25,8 @@ class Viewer_Queue_Component extends Component {
       songName: songName,
       artist: artist,
       duration: duration,
-      songID: songID
+      songID: songID,
+      artist_id: artist_id
     });
   }
 
@@ -30,12 +34,14 @@ class Viewer_Queue_Component extends Component {
     if(this.props.song !== nextProps.song ||
        this.props.artist !== nextProps.artist ||
        this.props.duration !== nextProps.duration ||
-       this.props.songID !== nextProps.songID)  {
+       this.props.songID !== nextProps.songID ||
+       this.props.artist_id !== nextProps.artist_id)  {
       this.setState({
         songName: nextProps.song,
         artist: nextProps.artist,
         duration: nextProps.duration,
-        songID: nextProps.songID
+        songID: nextProps.songID,
+        artist_id: nextProps.artist_id
       })
     }
   }
@@ -44,12 +50,16 @@ class Viewer_Queue_Component extends Component {
     this.props.callback(this.state.songID);
   }
 
+  handleArtistClick() {
+    this.props.onArtistClick(this.state.artist_id);
+  }
+
   render() {
       return (
           <tr>
              <td>{this.state.songID}</td>
              <td>{this.state.songName}</td>
-             <td>{this.state.artist} </td>
+             <td><a onClick={this.handleArtistClick}>{this.state.artist}</a></td>
              <td>{this.state.duration}</td>
              <td><Button onClick={this.handleClick}>
                play

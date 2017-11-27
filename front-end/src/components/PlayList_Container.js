@@ -34,22 +34,23 @@ class PlayList_Container extends Component {
     const data = this.props.data;
     return (
       <div className="PlayList_Container">
-        <h3>Hello, {this.props.name}</h3>
-        <hr></hr>
-        <a onClick={this.handleClick} className="playlist_item"><h4>Queue</h4></a>
-        <hr></hr>
-        <h4>Your Playlists</h4>
-        <div>
-          {this.state.playlists.map(function(d, i){
-            return (<PlaylistItem_Component
-              playlistId={d['playlist_id']}
-              playListName = {d['playlistName']}
-              onPlayListClick={this.send_PlayList_id_Up}
-              />)
-          }.bind(this))}
+        <Grid fluid={true}>
+          <h3>Hello, {this.props.name}</h3>
+          <hr></hr>
+          <a onClick={this.handleClick} className="playlist_item"><h4>Queue</h4></a>
+          <hr></hr>
+          <h4>Your Playlists</h4>
+          <div>
+            {this.state.playlists.map(function(d, i){
+              return (<PlaylistItem_Component
+                playlistId={d['playlist_id']}
+                playListName = {d['playlistName']}
+                onPlayListClick={this.send_PlayList_id_Up}
+                />)
+            }.bind(this))}
 
-        </div>
-
+          </div>
+        </Grid>
       </div>
     );
   }

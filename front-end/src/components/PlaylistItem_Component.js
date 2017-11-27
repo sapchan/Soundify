@@ -27,7 +27,7 @@ class PlaylistItem_Component extends Component {
 
   render() {
     return (
-      <Grid>
+      <Grid fluid={true}>
         <Row>
           <a onClick={this.handleClick} className="playlist_item"><p>{this.state.title}</p></a>
         </Row>
