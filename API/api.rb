@@ -9,6 +9,7 @@ before do
 	response.headers['Access-Control-Allow-Origin'] = '*'
 end
 
+#get all songs in playlist pl_id
 get '/playlist/:pl_id' do
     if params['pl_id'] == '123'
 			playlist = [{:title => 'Capsize', :artist => 'FRENSHIP', :duration => 237, :song_key => 123},{:title => '1000 Nights', :artist => 'FRENSHIP', :duration => 164, :song_key => 567}];
@@ -20,10 +21,17 @@ get '/playlist/:pl_id' do
 		JSON.generate(playlist)
 end
 
+#get all playlist information from usr_id
 get '/getListPlaylist/:usr_id' do
 	#get all the playlists for a specific user
 end
 
+#get the list of all of usr_id's friends
+get '/getListFriends/:usr_id' do
+	#get all the friends for a specific user
+end
+
+# get the queue of a user
 get '/queue' do
 
 	queue = {
@@ -46,6 +54,7 @@ get '/queue' do
 
 end
 
+# get all of the information about a user
 get '/initialize/:usr_id' do
 	#This needs to get all of the information about a specific user based on the user id
 	initialInformation = {
@@ -91,6 +100,11 @@ get '/initialize/:usr_id' do
 
 end
 
+# add a friend to user's list of friends based on usr_id
+post '/addFriend/:usr_id' do
+	# add the friend to the database. THe usr_id is the user's id. The friend is in the post information with the tag of 'friend'. Add the user.
+
+end
 
 post '/something_secure/' do # someome submits a form to /something_secure using post
     # there's a field in a form where the name in the form tag is post_from_html_key

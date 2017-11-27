@@ -53,7 +53,9 @@ class App extends Component {
     this.getPlaylist = this.getPlaylist.bind(this);
     this.getQueue = this.getQueue.bind(this);
     this.update_player_with_song = this.update_player_with_song.bind(this);
-    this.getListOfPlaylists = this.getListOfPlaylists.bind(this);
+    this.getYourPlaylists = this.getYourPlaylists.bind(this);
+    this.getListOfFriends = this.getListOfFriends.bind(this);
+    this.addFriend = this.addFriend.bind(this);
   }
 
   // This initializes all of the information when a user logs in based on what their user id is.
@@ -77,9 +79,9 @@ class App extends Component {
     }.bind(this));
   }
 
-  // This gets all of the playlists a person has based on their user_id
-  getListOfPlaylists(user_id) {
-    let location = 'http://localhost:4567/getListPlaylist/' + user_id;
+  // This gets all of a users's playlists
+  getYourPlaylists() {
+    let location = 'http://localhost:4567/getListPlaylist/' + this.state.user_id;
     axios.get(location).then(function (response) {
       let playlist = response.data;
       this.setState({
@@ -117,6 +119,37 @@ class App extends Component {
     this.setState({
       curSong: song_id
     })
+  }
+
+  // this gets the list of friends for a specific user.
+  getListOfFriends(user_id) {
+    let location = 'http://localhost:4567/getListFriends/' + user_id;
+    axios.get(location).then(function (response) {
+      let friends = response.data;
+      this.setState({
+        friends: friends
+      });
+    }.bind(this));
+  }
+
+  // function to add the friend given the friend's username
+  addFriend(userName) {
+    let location = 'http://localhost:4567/addFriend/' + this.state.user_id;
+    axios.post(location, {
+      friend:userName
+    }).then(function(response){
+      this.getListOfFriends(this.state.user_id);
+    }).bind(this);
+  }
+
+  // function to add the playlist with the input name
+  addPlaylist(playlistName) {
+    let location = 'http://localhost:4567/addPlaylist/' + this.state.user_id;
+    axios.post(location, {
+      playlist:playlistName
+    }).then(function(response){
+      this.getYourPlaylists(this.state.user_id);
+    }).bind(this);
   }
 
   render() {
