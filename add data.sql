@@ -1,151 +1,166 @@
 INSERT INTO Artist (ar_id, name, description)
-VALUES (1234567891234567890000000, 'Lorde', 'From New Zealand');
+VALUES (0, 'Lorde', 'From New Zealand');
 
 INSERT INTO Artist (ar_id, name, description)
-VALUES (1234567891234567890000001, 'Vampire Weekend', 'The absolute Boys.');
+VALUES (1, 'Vampire Weekend', 'The absolute Boys.');
 
 INSERT INTO Artist (ar_id, name, description)
-VALUES (1234567891234567890000002, 'ABBA', 'Swedish as heck. Mama Mia music.');
+VALUES (2, 'ABBA', 'Swedish as heck. Mama Mia music.');
 
 
 
 INSERT INTO Album (al_id, title, ar_id, date)
-VALUES (1234567891234567890000000, 'Pure Heroine', 1234567891234567890000000, 2013);
+VALUES (0, 'Pure Heroine', 0, 2013);
 
 INSERT INTO Album (al_id, title, ar_id, date)
-VALUES (1234567891234567890000001, 'Melodrama', 1234567891234567890000000, 2017);
+VALUES (1, 'Melodrama', 0, 2017);
 
 INSERT INTO Album (al_id, title, ar_id, date)
-VALUES (1234567891234567890000002, 'Vampire Weekend', 1234567891234567890000001, 2008);
+VALUES (2, 'Vampire Weekend', 1, 2008);
 
 INSERT INTO Album (al_id, title, ar_id, date)
-VALUES (1234567891234567890000003, 'Contra', 1234567891234567890000001, 2010);
+VALUES (3, 'Contra', 1, 2010);
 
 INSERT INTO Album (al_id, title, ar_id, date)
-VALUES (1234567891234567890000004, 'Modern Vampires of the City', 1234567891234567890000001, 2013);
+VALUES (4, 'Modern Vampires of the City', 1, 2013);
 
 INSERT INTO Album (al_id, title, ar_id, date)
-VALUES (1234567891234567890000005, 'Gold: Greatest Hits', 1234567891234567890000002, 2002);
+VALUES (5, 'Gold: Greatest Hits', 2, 2002);
 
 
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000000, "400 Lux", 1234567891234567890000000, 1234567891234567890000000, 1.0, 'www.google.com', 'Alternative');
+VALUES (0, "400 Lux", 0, 0, 1.0, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000001, "Ribs", 1234567891234567890000000, 1234567891234567890000000, 0.95, 'www.google.com', 'Alternative');
+VALUES (1, "Ribs", 0, 0, 0.95, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000002, "Royals", 1234567891234567890000000, 1234567891234567890000000, 0.35, 'www.google.com', 'Alternative');
+VALUES (2, "Royals", 0, 0, 0.35, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000003, "The Louvre", 1234567891234567890000000, 1234567891234567890000001, 0.85, 'www.google.com', 'Alternative');
+VALUES (3, "The Louvre", 0, 1, 0.85, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000004, "Oxford Comma", 1234567891234567890000001, 1234567891234567890000002, 0.85, 'www.google.com', 'Alternative');
+VALUES (4, "Oxford Comma", 1, 2, 0.85, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000005, "I Stand Corrected", 1234567891234567890000001, 1234567891234567890000002, 0.94, 'www.google.com', 'Alternative');
+VALUES (5, "I Stand Corrected", 1, 2, 0.94, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000006, "M79", 1234567891234567890000001, 1234567891234567890000002, 0.96, 'www.google.com', 'Alternative');
+VALUES (6, "M79", 1, 2, 1, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000007, "White Sky", 1234567891234567890000001, 1234567891234567890000003, 0.76, 'www.google.com', 'Alternative');
+VALUES (7, "White Sky", 1, 3, 0.76, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000008, "Giving Up The Gun", 1234567891234567890000001, 1234567891234567890000003, 0.78, 'www.google.com', 'Alternative');
+VALUES (8, "Giving Up The Gun", 1, 3, 0.78, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000009, "Obvious Bicycle", 1234567891234567890000001, 1234567891234567890000004, 0.88, 'www.google.com', 'Alternative');
+VALUES (9, "Obvious Bicycle", 1, 4, 0.88, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000010, "Don't Lie", 1234567891234567890000001, 1234567891234567890000004, 0.83, 'www.google.com', 'Alternative');
+VALUES (10, "Don't Lie", 1, 4, 0.83, 'www.google.com', 'Alternative');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000011, "Dancing Queen", 1234567891234567890000002, 1234567891234567890000005, 0.99, 'www.google.com', 'Pop');
+VALUES (11, "Dancing Queen", 2, 5, 0.99, 'www.google.com', 'Pop');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000012, "Mamma Mia", 1234567891234567890000002, 1234567891234567890000005, 0.99, 'www.google.com', 'Pop');
+VALUES (12, "Mamma Mia", 2, 5, 0.99, 'www.google.com', 'Pop');
 
 INSERT INTO Song (so_id, title, ar_id, al_id, popularity, link, genre)
-VALUES (1234567891234567890000013, "Take A Chance On Me", 1234567891234567890000002, 1234567891234567890000005, 0.99, 'www.google.com', 'Pop');
+VALUES (13, "Take A Chance On Me", 2, 5, 0.99, 'www.google.com', 'Pop');
 
 
 
 INSERT INTO User (us_id, username, password)
-VALUES (1234567891234567890000000, 'Vincent', 'drowssap');
+VALUES (0, 'Vincent', 'drowssap');
 
 INSERT INTO User (us_id, username, password)
-VALUES (1234567891234567890000001, 'Sam Whitman', 'password');
+VALUES (1, 'Sam Whitman', 'password');
 
 INSERT INTO User (us_id, username, password)
-VALUES (1234567891234567890000002, 'Anna', 'sedlackova');
+VALUES (2, 'Anna', 'sedlackova');
 
 
 
 INSERT INTO Following (follower, followed)
-Values (1234567891234567890000000,1234567891234567890000001);
+Values (0,1);
 
 INSERT INTO Following (follower, followed)
-Values (1234567891234567890000001,1234567891234567890000000);
+Values (1,0);
 
 INSERT INTO Following (follower, followed)
-Values (1234567891234567890000001,1234567891234567890000002);
+Values (1,2);
 
 INSERT INTO Following (follower, followed)
-Values (1234567891234567890000002,1234567891234567890000000);
+Values (2,0);
 
 
 
 INSERT INTO Playlist (pl_id, name, us_id)
-VALUES (1234567891234567890000000, 'Jams', 1234567891234567890000000);
+VALUES (0, 'Jams', 0);
 
 INSERT INTO Playlist (pl_id, name, us_id)
-VALUES (1234567891234567890000001, 'James', 1234567891234567890000001);
+VALUES (1, 'James', 1);
 
 INSERT INTO Playlist (pl_id, name, us_id)
-VALUES (1234567891234567890000002, 'Dope Ass Playlist', 1234567891234567890000002);
+VALUES (2, 'Dope Ass Playlist', 2);
 
-
-
-INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000000,1234567891234567890000000);
-
-INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000000,1234567891234567890000001);
-
-INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000000,1234567891234567890000003);
-
-INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000000,1234567891234567890000006);
-
-INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000000,1234567891234567890000010);
-
-INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000000,12345678912345678900000011);
+INSERT INTO Playlist (pl_id, name, us_id)
+VALUES (3, 'Jams_2', 0);
 
 
 INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000001,12345678912345678900000011);
+VALUES (0,0);
 
 INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000001,12345678912345678900000012);
+VALUES (0,1);
 
 INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000001,12345678912345678900000013);
+VALUES (0,3);
 
 INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000001,12345678912345678900000002);
+VALUES (0,6);
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (0,10);
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (0,11);
 
 
 INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000002,12345678912345678900000002);
+VALUES (1,11);
 
 INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000002,12345678912345678900000012);
+VALUES (1,12);
 
 INSERT INTO PlaylistSong (pl_id, so_id)
-VALUES (1234567891234567890000002,12345678912345678900000004);
+VALUES (1,13);
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (1,02);
+
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (2,02);
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (2,12);
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (2,04);
+
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (3,01);
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (3,05);
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (3,07);
+
+INSERT INTO PlaylistSong (pl_id, so_id)
+VALUES (3,12);

@@ -1,3 +1,10 @@
+CREATE TABLE `Artist` (
+  `ar_id` int(25) unsigned NOT NULL,
+  `name` varchar(60) NOT NULL DEFAULT '',
+  `description` longtext,
+  PRIMARY KEY (`ar_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `Album` (
   `al_id` int(25) unsigned NOT NULL,
   `title` varchar(60) NOT NULL DEFAULT '',
@@ -8,11 +15,11 @@ CREATE TABLE `Album` (
   CONSTRAINT `Album-Artist` FOREIGN KEY (`ar_id`) REFERENCES `Artist` (`ar_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `Artist` (
-  `ar_id` int(25) unsigned NOT NULL,
-  `name` varchar(60) NOT NULL DEFAULT '',
-  `description` longtext,
-  PRIMARY KEY (`ar_id`)
+CREATE TABLE `User` (
+  `us_id` int(25) unsigned NOT NULL,
+  `username` varchar(25) NOT NULL DEFAULT '',
+  `password` varchar(25) NOT NULL DEFAULT '',
+  PRIMARY KEY (`us_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Following` (
@@ -33,6 +40,20 @@ CREATE TABLE `Playlist` (
   CONSTRAINT `Playlist-User` FOREIGN KEY (`us_id`) REFERENCES `User` (`us_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `Song` (
+  `so_id` int(25) unsigned NOT NULL,
+  `title` varchar(60) NOT NULL DEFAULT '',
+  `ar_id` int(25) unsigned NOT NULL,
+  `al_id` int(25) unsigned NOT NULL,
+  `popularity` float DEFAULT NULL,
+  `link` text NOT NULL,
+  `genre` varchar(25) NOT NULL DEFAULT 'Unknown',
+  PRIMARY KEY (`so_id`),
+  KEY `Song-Artist` (`ar_id`),
+  CONSTRAINT `Song-Album` FOREIGN KEY (`al_id`) REFERENCES `Album` (`al_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `Song-Artist` FOREIGN KEY (`ar_id`) REFERENCES `Artist` (`ar_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `PlaylistSong` (
   `pl_id` int(25) unsigned NOT NULL,
   `so_id` int(25) unsigned NOT NULL,
@@ -50,25 +71,4 @@ CREATE TABLE `Queue` (
   KEY `Queue-Song` (`so_id`),
   CONSTRAINT `Queue-Song` FOREIGN KEY (`so_id`) REFERENCES `Song` (`so_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `Queue-User` FOREIGN KEY (`us_id`) REFERENCES `User` (`us_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `Song` (
-  `so_id` int(25) unsigned NOT NULL,
-  `title` varchar(60) NOT NULL DEFAULT '',
-  `ar_id` int(25) unsigned NOT NULL,
-  `al_id` int(25) unsigned NOT NULL,
-  `popularity` float DEFAULT NULL,
-  `link` text NOT NULL,
-  `genre` varchar(25) NOT NULL DEFAULT 'Unknown',
-  PRIMARY KEY (`so_id`),
-  KEY `Song-Artist` (`ar_id`),
-  CONSTRAINT `Song-Album` FOREIGN KEY (`so_id`) REFERENCES `Album` (`al_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `Song-Artist` FOREIGN KEY (`ar_id`) REFERENCES `Artist` (`ar_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `User` (
-  `us_id` int(25) unsigned NOT NULL,
-  `username` varchar(25) NOT NULL DEFAULT '',
-  `password` varchar(25) NOT NULL DEFAULT '',
-  PRIMARY KEY (`us_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
