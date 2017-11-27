@@ -2,8 +2,9 @@
 require 'sinatra'
 require 'sequel'
 require 'json'
+require 'base64'
 
-#DB = Sequel.connect(:adapter => 'mysql2', :user => 'soundify', :password=>'tomozpan', :host => 'soundify.ccj707h8lkgk.us-east-1.rds.amazonaws.com', :database => 'soundify')
+DB = Sequel.connect(:adapter => 'mysql2', :user => 'soundify', :password=>'tomozpan', :host => 'soundify.ccj707h8lkgk.us-east-1.rds.amazonaws.com', :database => 'soundify')
 
 before do
 	response.headers['Access-Control-Allow-Origin'] = '*'
@@ -213,6 +214,38 @@ get '/initialize/:usr_id' do
 		    }]
 	}
 	JSON[initialInformation]
+end
+
+post '/signup' do
+	if params['username'] and params['password']
+		DB.run("INSERT INTO User(us_id, username, password) VALUES ('#{SecureRandom.uuid}','#{params['username']}','#{params['password']}')")
+		{ 'token1'=>Base64.encode64(params['username']), 'token2'=>Base64.encode64(params['password']) }.to_json
+	else
+		{'error'=>'invalid username and password for signup'}.to_json
+	end
+end
+
+post '/generateFakeUsers' do
+
+	for i in 1..100 do
+		artist = 'artist_' + i.to_s
+		description = 'description_' + i.to_s
+		uuid = SecureRandom.uuid
+		DB.run("INSERT INTO Artist(ar_id, name, description) VALUES ('#{uuid}','#{artist}','#{description}')")
+	end
+end
+
+
+post '/login' do
+	if params['username'] and params['password']
+		if DB["SELECT * FROM User WHERE User.username = '#{params['username']}' AND User.password = '#{params['password']}'"].count == 1
+			{ 'token1'=>Base64.encode64(params['username']), 'token2'=>Base64.encode64(params['password']) }.to_json
+		else
+			{'error'=>'invalid username and password'}.to_json
+		end
+	else
+		{'error'=>'user not found'}.to_json
+    end
 end
 
 # add a friend to user's list of friends based on usr_id
