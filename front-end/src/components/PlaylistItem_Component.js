@@ -29,9 +29,7 @@ class PlaylistItem_Component extends Component {
     return (
       <Grid>
         <Row>
-          <a onClick={this.handleClick} className="playlist_item">
-            {this.state.title}
-          </a>
+          <a onClick={this.handleClick} className="playlist_item"><p>{this.state.title}</p></a>
         </Row>
       </Grid>
     );

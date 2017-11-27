@@ -16,7 +16,7 @@ get '/playlist/:pl_id' do
 		elsif params['pl_id'] == '132'
 			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :duration => 164, :song_key => 567}];
 		else
-			playlist = {:title => '', :artist => '', :duration => 0, :song_key => undefined}
+			playlist = [{:title => 'NA', :artist => 'NA', :duration => 0, :song_key => 0}]
 		end
 		JSON.generate(playlist)
 end
@@ -24,6 +24,43 @@ end
 #get all playlist information from usr_id
 get '/getListPlaylist/:usr_id' do
 	#get all the playlists for a specific user
+	if params['usr_id'] == '1'
+		playlist = {
+			'playlist' => [
+				{
+					'playlistName' => 'Cindy Playlist 1',
+					'playlist_id' => 123
+				},
+				{
+					'playlistName' => 'Cindy Playlist 2',
+					'playlist_id' => 132
+				},
+			]
+		}
+	elsif params['usr_id'] == '2'
+		playlist = {
+			'playlist' => [
+				{
+					'playlistName' => 'Andy Playlist 1',
+					'playlist_id' => 155
+				},
+				{
+					'playlistName' => 'Andy Playlist 2',
+					'playlist_id' => 1332
+				},
+			]
+		}
+	else
+		playlist = {
+			'playlist' => [
+				{
+					'playlistName' => 'NA',
+					'playlist_id' => 0
+				}
+			]
+		}
+	end
+	JSON[playlist]
 end
 
 #get the list of all of usr_id's friends
@@ -59,7 +96,7 @@ get '/initialize/:usr_id' do
 	#This needs to get all of the information about a specific user based on the user id
 	initialInformation = {
 		'name' => 'testDummy',
-		'usr_id' => 0
+		'usr_id' => 0,
 		'playlist' => [
 			{
 				'playlistName' => 'playlist 1',
@@ -72,11 +109,11 @@ get '/initialize/:usr_id' do
 		],
 		'friends' => [
 			{
-				'friend_name' => 'friend 1',
+				'friend_name' => 'Cindy Pan',
 				'friend_id' => 1
 			},
 			{
-				'friend_name' => 'friend 2',
+				'friend_name' => 'Andy Santulli',
 				'friend_id' => 2
 			}
 		],

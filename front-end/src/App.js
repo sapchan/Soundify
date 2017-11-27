@@ -32,6 +32,14 @@ class App extends Component {
             "friend_name": "friend 2",
             "friend_id": 2
         }],
+      friends_playlist:[{
+            "playlistName": "playlist 1",
+            "playlist_id": 123
+        },
+        {
+            "playlistName": "playlist 2",
+            "playlist_id": 132
+        }],
       queue: [
         {
           "title": "Song 1",
@@ -48,6 +56,7 @@ class App extends Component {
       ],
       queueView: true,
       friendView: false,
+      artistView: false,
       curSong: 1
     };
     this.getPlaylist = this.getPlaylist.bind(this);
@@ -56,6 +65,8 @@ class App extends Component {
     this.getYourPlaylists = this.getYourPlaylists.bind(this);
     this.getListOfFriends = this.getListOfFriends.bind(this);
     this.addFriend = this.addFriend.bind(this);
+    this.getFriendPlaylist = this.getFriendPlaylist.bind(this);
+    this.viewFriendsSongsInPlaylist = this.viewFriendsSongsInPlaylist.bind(this);
   }
 
   // This initializes all of the information when a user logs in based on what their user id is.
@@ -69,6 +80,7 @@ class App extends Component {
       let playlist = information[0]['playlist'];
       let friends = information[0]['friends'];
       let queue = information[0]['queue'];
+      console.log(friends);
       this.setState({
         name: name,
         user_id: user_id,
@@ -79,7 +91,7 @@ class App extends Component {
     }.bind(this));
   }
 
-  // This gets all of a users's playlists
+  // This gets all of a users's playlists names and ids
   getYourPlaylists() {
     let location = 'http://localhost:4567/getListPlaylist/' + this.state.user_id;
     axios.get(location).then(function (response) {
@@ -99,6 +111,9 @@ class App extends Component {
         queue: queue
       });
     }.bind(this));
+    if(this.state.queueView != true) {
+      this.changeToPlaylist();
+    }
   }
 
   // This gets the queue at the beginning. Will be useful when a song finishes, so we can play the next song in line
@@ -132,6 +147,47 @@ class App extends Component {
     }.bind(this));
   }
 
+  // this gets all the playlists for a friends
+  getFriendPlaylist(user_id){
+    let location = 'http://localhost:4567/getListPlaylist/' + user_id;
+    axios.get(location).then(function (response) {
+      let friends_playlist = response.data.playlist;
+      this.setState({
+        friends_playlist: friends_playlist
+      });
+    }.bind(this));
+    if(this.state.friendView != true) {
+      this.changeToFriend();
+    }
+  }
+
+  // change all views to playlistView
+  changeToPlaylist(){
+    this.setState({
+      queueView: true,
+      friendView: false,
+      artistView: false
+    })
+  }
+
+  // change all views to friend views
+  changeToFriend(){
+    this.setState({
+      queueView: false,
+      friendView: true,
+      artistView: false
+    });
+  }
+
+  // change all views to artist view
+  changeToArtist(){
+    this.setState({
+      queueView: false,
+      friendView: false,
+      artistView: true
+    })
+  }
+
   // function to add the friend given the friend's username
   addFriend(userName) {
     let location = 'http://localhost:4567/addFriend/' + this.state.user_id;
@@ -152,6 +208,11 @@ class App extends Component {
     }).bind(this);
   }
 
+  // displays the sogns depending on the playlist id
+  viewFriendsSongsInPlaylist(playlist_id){
+    this.getPlaylist(playlist_id)
+  }
+
   render() {
     return (
       <div className="App">
@@ -169,12 +230,18 @@ class App extends Component {
                 <Viewer_Container
                   playerView = {this.state.queueView}
                   friendView = {this.state.friendView}
+                  artistView = {this.state.artistView}
                   data={this.state.queue}
+                  friends_playlist = {this.state.friends_playlist}
                   update={this.update_player_with_song}
+                  viewSongs={this.viewFriendsSongsInPlaylist}
                 />
             </Col>
             <Col md={1}>
-              <BeSocial_Container data={this.state.friends}/>
+              <BeSocial_Container
+                data={this.state.friends}
+                getFriendPlaylist={this.getFriendPlaylist}
+              />
             </Col>
           </Row>
           <Row>

@@ -36,7 +36,9 @@ class PlayList_Container extends Component {
       <div className="PlayList_Container">
         <h3>Hello, {this.props.name}</h3>
         <hr></hr>
-        <p>Your Playlists</p>
+        <a onClick={this.handleClick} className="playlist_item"><h4>Queue</h4></a>
+        <hr></hr>
+        <h4>Your Playlists</h4>
         <div>
           {this.state.playlists.map(function(d, i){
             return (<PlaylistItem_Component
@@ -45,9 +47,7 @@ class PlayList_Container extends Component {
               onPlayListClick={this.send_PlayList_id_Up}
               />)
           }.bind(this))}
-          <a onClick={this.handleClick} className="playlist_item">
-            Queue
-          </a>
+
         </div>
 
       </div>
