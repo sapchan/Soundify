@@ -67,7 +67,7 @@ end
 #get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
 get '/getArtistInformation/:ar_id' do
 	puts "here:"
-	puts DB.execute("SELECT * FROM Album NATURAL JOIN Artist WHERE ar_id = '8a884439-105c-4482-b9e5-1ae4fe1055cb';")
+	puts DB["SELECT * FROM Album NATURAL JOIN Artist"].as_hash(:ar_id)
 	puts "yolo"
 	if params['ar_id'] == '12'
 		artist_info = {
