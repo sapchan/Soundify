@@ -67,7 +67,7 @@ end
 
 #get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
 get '/getArtistInformation/:ar_id' do
-	songs = DB["SELECT *, Album.title AS Atitle FROM Album NATURAL JOIN Artist JOIN Song ON(Album.al_id = Song.al_id) WHERE ar_id = '8f7f6fbe-8973-44d0-bea1-fce2ee9603e7'"].as_hash(:so_id)
+	songs = DB["SELECT *, Album.title AS Atitle FROM Album NATURAL JOIN Artist JOIN Song ON(Album.al_id = Song.al_id) WHERE ar_id = #{params['ar_id']}"].as_hash(:so_id)
 	# wew kids, get ready for some crazy formatting :yikes:
 	# @sacheth I hope this is how you want it
 
@@ -95,60 +95,19 @@ get '/getArtistInformation/:ar_id' do
 			artist_info[:artistInfo][0]['Albums'] << {'album_title' => stuff[:Atitle],
 																			'songs': [{'songName' => stuff[:title],
 																									 'song_key' => stuff[:so_id],
-																									 'link' => stuff[:link],
-																									 'duration' => 999 }] }
+																									 'link' => stuff[:link] }] }
 		else # if the album is listed, add the song to it
 			for i in 0...artist_info[:artistInfo][0]['Albums'].length
 				if artist_info[:artistInfo][0]['Albums'][i]['album_title'] == stuff[:Atitle]
 					artist_info[:artistInfo][0]['Albums'][i][:songs] << {'songName' => stuff[:title],
 																											'song_key' => stuff[:so_id],
-																											'link' => stuff[:link],
-																											'duration' => 999}
+																											'link' => stuff[:link]}
 				end
 			end
 		end
 	end
 
-	if params['ar_id'] == '012'
-		artist_info = {
-			'artistInfo': [
-				{
-					'Name'=> 'FRENSHIP',
-					'artist_id' => 12,
-					'Description'=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
-					'Albums'=> [
-						{
-							'album_title' => 'album 1',
-							'songs' => [{
-									'songName' => 'Capsize',
-									'song_key' => 123,
-									'duration' => 237
-									},
-									{
-										'songName' => '1000 Nights',
-										'song_key' => 567,
-										'duration' => 164
-									}],
-							},
-							{
-							'album_title' => 'album 2',
-							'songs' => [{
-									'songName' => 'Song a',
-									'song_key' => 1,
-									'duration' => 2
-									},
-									{
-										'songName' => 'Song b',
-										'song_key' => 2,
-										'duration' => 164
-								}]
-							}]
-				}]
-		}
-		JSON[artist_info]
-	else
-		JSON[artist_info]
-	end
+	return JSON[artist_info]
 end
 
 #get the list of all of usr_id's friends
