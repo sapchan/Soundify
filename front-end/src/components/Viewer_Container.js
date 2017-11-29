@@ -95,12 +95,13 @@ class Viewer_Container extends Component {
                 <tbody>
                 {this.state.data.map(function(s, i)
                   {
+                    console.log(s)
                     return (<Viewer_Queue_Component
                               key={i}
                               songID={s.so_id}
                               song={s.title}
                               artist={s.name}
-                              artist_id={s.artist_id}
+                              artist_id={s.ar_id}
                               duration={s.duration}
                               callback={this.updateCurrentSong}
                               onArtistClick={this.props.onArtistClick}

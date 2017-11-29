@@ -31,7 +31,7 @@ get '/getListPlaylist/:usr_id' do
 end
 #get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
 get '/getArtistInformation/:ar_id' do
-	songs = DB["SELECT *, Album.title AS Atitle FROM Album NATURAL JOIN Artist JOIN Song ON(Album.al_id = Song.al_id) WHERE ar_id = #{params['ar_id']}"].as_hash(:so_id)
+	songs = DB["SELECT *, Album.title AS Atitle FROM Album NATURAL JOIN Artist JOIN Song ON(Album.al_id = Song.al_id) WHERE ar_id = '#{params['ar_id']}'"].as_hash(:so_id)
 	# wew kids, get ready for some crazy formatting :yikes:
 	# @sacheth I hope this is how you want it
 
@@ -103,6 +103,7 @@ post '/signup' do
 		{'error'=>'invalid username and password for signup'}.to_json
 	end
 end
+
 post '/login' do
 	if params['username'] and params['password']
 		if DB["SELECT * FROM User WHERE User.username = '#{params['username']}' AND User.password = '#{params['password']}'"].count == 1
@@ -128,7 +129,7 @@ post '/something_secure/' do # someome submits a form to /something_secure using
 end
 
 def getQueueForUser(usr_id)
-	query = "SELECT Song.title, Artist.name, Song.popularity AS duration, Song.so_id FROM Queue, Song, Album, Artist WHERE Queue.so_id = Song.so_id AND Song.al_id = Album.al_id AND Album.ar_id = Artist.ar_id AND Queue.us_id = '#{usr_id}'"
+	query = "SELECT Song.title, Artist.name, Artist.ar_id, Song.popularity AS duration, Song.so_id FROM Queue, Song, Album, Artist WHERE Queue.so_id = Song.so_id AND Song.al_id = Album.al_id AND Album.ar_id = Artist.ar_id AND Queue.us_id = '#{usr_id}'"
 	playlist_name_tupule = DB[query]
 	playlist = []
 	playlist_name_tupule.each { |x|  playlist.push(x)}

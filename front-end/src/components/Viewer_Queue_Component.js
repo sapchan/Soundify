@@ -37,6 +37,7 @@ class Viewer_Queue_Component extends Component {
        this.props.songID !== nextProps.songID ||
        this.props.artist_id !== nextProps.artist_id)  {
       this.setState({
+
         songName: nextProps.song,
         artist: nextProps.artist,
         duration: nextProps.duration,
