@@ -4,6 +4,7 @@ require 'sequel'
 require 'json'
 require 'base64'
 require 'SecureRandom'
+require 'execjs'
 
 DB = Sequel.connect(:adapter => 'mysql2', :user => 'soundify', :password=>'tomozpan', :host => 'soundify.ccj707h8lkgk.us-east-1.rds.amazonaws.com', :database => 'soundify')
 
@@ -30,63 +31,47 @@ get '/getListPlaylist/:usr_id' do
 end
 #get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
 get '/getArtistInformation/:ar_id' do
-	if params['ar_id'] == '12'
+	songs = DB["SELECT *, Album.title AS Atitle FROM Album NATURAL JOIN Artist JOIN Song ON(Album.al_id = Song.al_id) WHERE ar_id = #{params['ar_id']}"].as_hash(:so_id)
+	# wew kids, get ready for some crazy formatting :yikes:
+	# @sacheth I hope this is how you want it
+
+	# use just the first song (it breaks after the first iteration)
+	# to set up the artist_info object
+	artist_info = {}
+	songs.each do |key, stuff|
 		artist_info = {
-			'artistInfo': [
+			'artistInfo':[
 				{
-					'Name'=> 'FRENSHIP',
-					'artist_id' => 12,
-					'Description'=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
-					'Albums'=> [
-						{
-							'album_title' => 'album 1',
-							'songs' => [{
-									'songName' => 'Capsize',
-									'song_key' => 123,
-									'duration' => 237
-									},
-									{
-										'songName' => '1000 Nights',
-										'song_key' => 567,
-										'duration' => 164
-									}],
-							},
-							{
-							'album_title' => 'album 2',
-							'songs' => [{
-									'songName' => 'Song a',
-									'song_key' => 1,
-									'duration' => 2
-									},
-									{
-										'songName' => 'Song b',
-										'song_key' => 2,
-										'duration' => 164
-								}]
-							}]
-				}]
+					'Name' => stuff[:name],
+					'artist_id' => stuff[:ar_id],
+					'Description' => stuff[:description],
+					'Albums' => []
+				}
+			]
 		}
-		JSON[artist_info]
-	else
-		artist_info = {
-			'artist_info':[
-				{
-			      'Name'=> 'NA',
-			      'artist_id' => 0,
-			      'Description'=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
-			      'Albums'=> [
-			        {
-			          'album_title' => 'No Albums Available',
-			          'songs' => [{
-			              'songName' => 'No Songs Available',
-			              'song_key' => 0,
-			              'duration' => 0
-			              }]
-			          }]
-			    }]
-		}
-		JSON[artist_info]
+		break
 	end
+
+	# now populate that object with albums and songs
+	songs.each do |key, stuff|
+		# make sure to make a new album if the album isn't already listed
+		if(artist_info[:artistInfo][0]['Albums'].all? {|a| a['album_title'] != stuff[:Atitle]})
+			artist_info[:artistInfo][0]['Albums'] << {'album_title' => stuff[:Atitle],
+																			'songs': [{'songName' => stuff[:title],
+																									 'song_key' => stuff[:so_id],
+																									 'link' => stuff[:link] }] }
+		else # if the album is listed, add the song to it
+			for i in 0...artist_info[:artistInfo][0]['Albums'].length
+				if artist_info[:artistInfo][0]['Albums'][i]['album_title'] == stuff[:Atitle]
+					artist_info[:artistInfo][0]['Albums'][i][:songs] << {'songName' => stuff[:title],
+																											'song_key' => stuff[:so_id],
+																											'link' => stuff[:link]}
+				end
+			end
+		end
+	end
+
+	return JSON[artist_info]
 end
 #get the list of all of usr_id's friends
 get '/getListFriends/:usr_id' do
