@@ -35,8 +35,8 @@ class BeSocial_Container extends Component {
             {this.state.data.map(function(d, i){
               return (<BeSocial_Friend_Item
                       key={i}
-                      friend_key={d['friend_id']}
-                      name={d['friend_name']}
+                      friend_key={d['us_id']}
+                      name={d['username']}
                       onFriendClick={this.sendUp}
               />
           )

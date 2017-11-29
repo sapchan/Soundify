@@ -3,6 +3,7 @@ require 'sinatra'
 require 'sequel'
 require 'json'
 require 'base64'
+require 'SecureRandom'
 
 DB = Sequel.connect(:adapter => 'mysql2', :user => 'soundify', :password=>'tomozpan', :host => 'soundify.ccj707h8lkgk.us-east-1.rds.amazonaws.com', :database => 'soundify')
 
@@ -21,49 +22,12 @@ get '/playlist/:pl_id' do
 		end
 		JSON.generate(playlist)
 end
-
 #get all playlist information from usr_id
 get '/getListPlaylist/:usr_id' do
 	#get all the playlists for a specific user
-	if params['usr_id'] == '1'
-		playlist = {
-			'playlist' => [
-				{
-					'playlistName' => 'Cindy Playlist 1',
-					'playlist_id' => 123
-				},
-				{
-					'playlistName' => 'Cindy Playlist 2',
-					'playlist_id' => 132
-				},
-			]
-		}
-	elsif params['usr_id'] == '2'
-		playlist = {
-			'playlist' => [
-				{
-					'playlistName' => 'Andy Playlist 1',
-					'playlist_id' => 155
-				},
-				{
-					'playlistName' => 'Andy Playlist 2',
-					'playlist_id' => 1332
-				},
-			]
-		}
-	else
-		playlist = {
-			'playlist' => [
-				{
-					'playlistName' => 'NA',
-					'playlist_id' => 0
-				}
-			]
-		}
-	end
+	getAllPlaylistsForUser(params['usr_id'])
 	JSON[playlist]
 end
-
 #get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
 get '/getArtistInformation/:ar_id' do
 	if params['ar_id'] == '12'
@@ -124,98 +88,28 @@ get '/getArtistInformation/:ar_id' do
 		JSON[artist_info]
 	end
 end
-
 #get the list of all of usr_id's friends
 get '/getListFriends/:usr_id' do
 	#get all the friends for a specific user
 end
-
 # get the queue of a user
-get '/queue' do
+get '/queue/:usr_id' do
 
-	queue = {
-		'queue': [
-			{
-				'title'=> 'Song 1',
-				'artist'=> 'Creator 1',
-				'artist_id' => 890,
-				'duration'=> 132,
-				'song_key'=> 1
-			},
-			{
-				'title'=> 'Song 2',
-				'artist'=> 'Creator 2',
-				'artist_id' => 950,
-				'duration'=> 273,
-				'song_key'=> 2,
-			}
-		]
-	}
-	JSON[queue]
+	queue = getQueueForUser(params['usr_id'])
+	info = [:queue => queue]
+	JSON[info]
 
 end
-
 # get all of the information about a user
 get '/initialize/:usr_id' do
 	#This needs to get all of the information about a specific user based on the user id
-	initialInformation = {
-		'name' => 'testDummy',
-		'usr_id' => 0,
-		'playlist' => [
-			{
-				'playlistName' => 'playlist 1',
-				'playlist_id' => 123
-			},
-			{
-				'playlistName' => 'playlist 2',
-				'playlist_id' => 132
-			},
-		],
-		'friends' => [
-			{
-				'friend_name' => 'Cindy Pan',
-				'friend_id' => 1
-			},
-			{
-				'friend_name' => 'Andy Santulli',
-				'friend_id' => 2
-			}
-		],
-		'queue': [
-			{
-				'title'=> 'Song 1',
-				'artist'=> 'Creator 1',
-				'artist_id' => 890,
-				'duration'=> 132,
-				'song_key'=> 1
-			},
-			{
-				'title'=> 'Song 2',
-				'artist'=> 'Creator 2',
-				'artist_id' => 950,
-				'duration'=> 273,
-				'song_key'=> 2,
-			}
-		],
-		'artist_info':[
-			{
-		      'Name'=> 'name',
-		      'artist_id' => 0,
-		      'Description'=> 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
-		      'Albums'=> [
-		        {
-		          'album_title' => 'album 1',
-		          'songs' => [{
-		              'songName' => 'Song 1',
-		              'song_key' => 0,
-		              'duration' => 0
-		              }]
-		          }]
-		    }]
-	}
-	JSON[initialInformation]
+	username = getUserName(params['usr_id'])
+	playlist = getAllPlaylistsForUser(params['usr_id'])
+	friends = getAllFriendsForUser(params['usr_id'])
+	queue = getQueueForUser(params['usr_id'])
+	info = [:username => username, :playlist => playlist, :friends => friends, :queue => queue]
+	JSON[info]
 end
-
 post '/signup' do
 	if params['username'] and params['password']
 		DB.run("INSERT INTO User(us_id, username, password) VALUES ('#{SecureRandom.uuid}','#{params['username']}','#{params['password']}')")
@@ -224,18 +118,6 @@ post '/signup' do
 		{'error'=>'invalid username and password for signup'}.to_json
 	end
 end
-
-post '/generateFakeUsers' do
-
-	for i in 1..100 do
-		artist = 'artist_' + i.to_s
-		description = 'description_' + i.to_s
-		uuid = SecureRandom.uuid
-		DB.run("INSERT INTO Artist(ar_id, name, description) VALUES ('#{uuid}','#{artist}','#{description}')")
-	end
-end
-
-
 post '/login' do
 	if params['username'] and params['password']
 		if DB["SELECT * FROM User WHERE User.username = '#{params['username']}' AND User.password = '#{params['password']}'"].count == 1
@@ -247,17 +129,49 @@ post '/login' do
 		{'error'=>'user not found'}.to_json
     end
 end
-
 # add a friend to user's list of friends based on usr_id
 post '/addFriend/:usr_id' do
 	# add the friend to the database. THe usr_id is the user's id. The friend is in the post information with the tag of 'friend'. Add the user.
 
 end
-
 post '/something_secure/' do # someome submits a form to /something_secure using post
     # there's a field in a form where the name in the form tag is post_from_html_key
     puts params['post_from_html_key'] # <input type='password' name='post_from_html_key' />
     # puts prints stuff out to the serve console, nothing is returned to the user
     # if you want to return something, do:
     #json {'keyyy': 'a test value'} # send a hash (dict) over json
+end
+
+def getQueueForUser(usr_id)
+	query = "SELECT Song.title, Artist.name, Song.popularity AS duration, Song.so_id FROM Queue, Song, Album, Artist WHERE Queue.so_id = Song.so_id AND Song.al_id = Album.al_id AND Album.ar_id = Artist.ar_id AND Queue.us_id = '#{usr_id}'"
+	playlist_name_tupule = DB[query]
+	playlist = []
+	playlist_name_tupule.each { |x|  playlist.push(x)}
+	return playlist
+end
+
+def getUserName(user_id)
+	begin
+		dataset = DB["SELECT username FROM User WHERE User.`us_id` = '#{user_id}'"]
+		username = dataset.map(:username)[0]
+	rescue
+		username = "Error: User Not Available. Please Reload the page."
+	end
+	return username
+end
+
+def getAllPlaylistsForUser(user_id)
+	playlist_name_tupule = DB["SELECT Playlist.pl_id, Playlist.name FROM Playlist WHERE Playlist.us_id = '#{user_id}'"]
+	playlist = []
+	playlist_name_tupule.each { |x|  playlist.push(x)}
+	return playlist
+end
+
+def getAllFriendsForUser(user_id)
+	query = "SELECT username, us_id FROM User WHERE us_id IN (SELECT follower FROM Following WHERE followed = '#{user_id}')"
+	puts query
+	friend_tupule = DB[query]
+	friends = []
+	friend_tupule.each {|x| friends.push(x)}
+	return friends
 end

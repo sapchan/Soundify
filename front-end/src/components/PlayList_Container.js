@@ -22,6 +22,17 @@ class PlayList_Container extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if( this.props.data !== nextProps.data ||
+        this.props.name !== nextProps.name
+    ) {
+      this.setState({
+        playlists: nextProps.data,
+        name: nextProps.name
+      })
+    }
+  }
+
   send_PlayList_id_Up(playlist_key){
     this.props.callback(playlist_key);
   }
@@ -43,8 +54,9 @@ class PlayList_Container extends Component {
           <div>
             {this.state.playlists.map(function(d, i){
               return (<PlaylistItem_Component
-                playlistId={d['playlist_id']}
-                playListName = {d['playlistName']}
+                id={i}
+                playlistId={d['pl_id']}
+                playListName = {d['name']}
                 onPlayListClick={this.send_PlayList_id_Up}
                 />)
             }.bind(this))}

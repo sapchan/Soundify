@@ -57,7 +57,6 @@ class Viewer_Queue_Component extends Component {
   render() {
       return (
           <tr>
-             <td>{this.state.songID}</td>
              <td>{this.state.songName}</td>
              <td><a onClick={this.handleArtistClick}>{this.state.artist}</a></td>
              <td>{this.state.duration}</td>

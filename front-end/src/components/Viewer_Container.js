@@ -86,27 +86,22 @@ class Viewer_Container extends Component {
               <Table striped={true} responsive={true}>
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Song</th>
                     <th>Artist</th>
-                    <th>Duration</th>
+                    <th>Popularity</th>
                     <th>Play</th>
                   </tr>
                 </thead>
                 <tbody>
                 {this.state.data.map(function(s, i)
                   {
-                    let duration = s.duration;
-                    let min = Math.floor(duration/60);
-                    let seconds = duration % 60;
-                    let time = min + ":" + seconds;
                     return (<Viewer_Queue_Component
                               key={i}
-                              songID={s.song_key}
+                              songID={s.so_id}
                               song={s.title}
-                              artist={s.artist}
+                              artist={s.name}
                               artist_id={s.artist_id}
-                              duration={time}
+                              duration={s.duration}
                               callback={this.updateCurrentSong}
                               onArtistClick={this.props.onArtistClick}
                             />);

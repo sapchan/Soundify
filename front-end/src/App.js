@@ -17,20 +17,20 @@ class App extends Component {
       name: 'test',
       user_id: 0,
       playlist: [{
-            "playlistName": "playlist 1",
-            "playlist_id": 123
+            "name": "playlist 1",
+            "pl_id": 123
         },
         {
-            "playlistName": "playlist 2",
-            "playlist_id": 132
+            "name": "playlist 2",
+            "pl_id": 132
         }],
       friends: [{
-            "friend_name": "friend 1",
-            "friend_id": 1
+            "username": "friend 1",
+            "us_id": 1
         },
         {
-            "friend_name": "friend 2",
-            "friend_id": 2
+            "username": "friend 2",
+            "us_id": 2
         }],
       friends_playlist:[{
             "playlistName": "playlist 1",
@@ -43,15 +43,15 @@ class App extends Component {
       queue: [
         {
           "title": "Song 1",
-          "artist": "Creator 1",
+          "name": "Creator 1",
           "duration": 132,
-          "song_key": 1
+          "so_id": 1
         },
         {
           "title": "Song 2",
-          "artist": "Creator 2",
+          "name": "Creator 2",
           "duration": 273,
-          "song_key": 2,
+          "so_id": 2,
         }
       ],
       artist_info: [
@@ -88,21 +88,19 @@ class App extends Component {
   // This initializes all of the information when a user logs in based on what their user id is.
   // Informaiton includes their playlists, previous queue, their friends, and what their current song is
   componentWillMount(){
-    let location = 'http://localhost:4567/initialize/123';
+    let location = 'http://localhost:4567/initialize/' + '2cc029a1-feb2-471e-98ad-94f55111b8d7';
     axios.get(location).then(function (response) {
-      let information = [response.data];
-      let name = information[0]['name'];
-      let user_id = information[0]['usr_id'];
-      let playlist = information[0]['playlist'];
-      let friends = information[0]['friends'];
-      let queue = information[0]['queue'];
-      let artist_info = information[0]['artist_info'];
+      let information = response.data[0];
+      let name = information['username'];
+      let playlist = information['playlist'];
+      let friends = information['friends'];
+      let queue = information['queue']
       this.setState({
         name: name,
-        user_id: user_id,
+        user_id: '2cc029a1-feb2-471e-98ad-94f55111b8d7',
         playlist: playlist,
         friends: friends,
-        queue: queue,
+        queue: queue
       });
     }.bind(this));
   }
@@ -134,9 +132,9 @@ class App extends Component {
 
   // This gets the queue at the beginning. Will be useful when a song finishes, so we can play the next song in line
   getQueue(){
-    let location = 'http://localhost:4567/queue';
+    let location = 'http://localhost:4567/queue/' + this.state.user_id;
     axios.get(location).then(function (response) {
-      let queue = response.data.queue;
+      let queue = response.data[0].queue;
       this.setState({
         queue: queue
       });
