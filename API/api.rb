@@ -59,13 +59,20 @@ get '/getArtistInformation/:ar_id' do
 			artist_info[:artistInfo][0]['Albums'] << {'album_title' => stuff[:Atitle],
 																			'songs': [{'songName' => stuff[:title],
 																									 'song_key' => stuff[:so_id],
-																									 'link' => stuff[:link] }] }
+																									 'duration' => stuff[:popularity],
+																									 'ar_id' => stuff[:ar_id],
+																									 'artistName' => stuff[:name],
+
+																									 }] }
 		else # if the album is listed, add the song to it
 			for i in 0...artist_info[:artistInfo][0]['Albums'].length
 				if artist_info[:artistInfo][0]['Albums'][i]['album_title'] == stuff[:Atitle]
 					artist_info[:artistInfo][0]['Albums'][i][:songs] << {'songName' => stuff[:title],
 																											'song_key' => stuff[:so_id],
-																											'link' => stuff[:link]}
+																											'duration' => stuff[:popularity],
+	 																									 'ar_id' => stuff[:ar_id],
+	 																									 'artistName' => stuff[:name],
+																											}
 				end
 			end
 		end

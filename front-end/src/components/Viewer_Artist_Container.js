@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Viewer_Queue_Component from './Viewer_Queue_Component';
 import { Grid, Button, Row, Col, Panel, tr, td } from 'react-bootstrap';
 
 class Viewer_Artist_Container extends Component {
@@ -46,6 +47,25 @@ class Viewer_Artist_Container extends Component {
             <Grid fluid={true}>
               <h3>{this.state.artist_name}</h3>
               <hr></hr>
+              <p>{this.state.artist_description}</p>
+              {this.state.album_covers.map(function(d,i) {
+                let bla = d.songs;
+                  {bla.map(function(s,j) {
+                    console.log(s.songName)
+                    return(
+                      <Viewer_Queue_Component
+                                key={j}
+                                songID={s.song_key}
+                                song={s.songName}
+                                artist={s.artistName}
+                                artist_id={s.ar_id}
+                                duration={s.duration}
+
+                        />
+                    );}
+                  )}
+              })
+            }
             </Grid>
             </div>
       );
