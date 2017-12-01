@@ -19,14 +19,19 @@ get '/playlist/:pl_id' do
 		elsif params['pl_id'] == '132'
 			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
 		else
-			playlist = [{:title => 'NA', :artist => 'NA', :artist_id => 0, :duration => 0, :song_key => 0}]
+			query = "SELECT * FROM Song NATURAL JOIN (SELECT *, Album.title AS Atitle FROM PlaylistSong WHERE pl_id = '#{params['pl_id']}') AS sons NATURAL JOIN Artist JOIN Album ON(Song.al_id = Album.al_id)"
+			songs = DB[query]
+			playlist = []
+			for each song in songs
+				playlist << {:title => song[:title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
+			end
 		end
 		JSON.generate(playlist)
 end
 #get all playlist information from usr_id
 get '/getListPlaylist/:usr_id' do
 	#get all the playlists for a specific user
-	getAllPlaylistsForUser(params['usr_id'])
+	playlist = getAllPlaylistsForUser(params['usr_id'])
 	JSON[playlist]
 end
 #get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
@@ -125,7 +130,7 @@ end
 # add a friend to user's list of friends based on usr_id
 post '/addFriend/:usr_id' do
 	# add the friend to the database. THe usr_id is the user's id. The friend is in the post information with the tag of 'friend'. Add the user.
-
+	query = "INSERT INTO Following (follower, followed) VALUES ('#{params['usr_id']}', '#{params['friend']}')" ##### we need to know who the person is who is initiating the follow
 end
 post '/something_secure/' do # someome submits a form to /something_secure using post
     # there's a field in a form where the name in the form tag is post_from_html_key
@@ -162,7 +167,6 @@ end
 
 def getAllFriendsForUser(user_id)
 	query = "SELECT username, us_id FROM User WHERE us_id IN (SELECT follower FROM Following WHERE followed = '#{user_id}')"
-	puts query
 	friend_tupule = DB[query]
 	friends = []
 	friend_tupule.each {|x| friends.push(x)}
