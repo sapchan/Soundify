@@ -74,6 +74,7 @@ class Viewer_Artist_Container extends Component {
                         artist_id={s.ar_id}
                         duration={s.duration}
                         callback={this.props.callback}
+                        onArtistClick={this.props.onArtistClick}
                       />
                   );}.bind(this)
                     )}

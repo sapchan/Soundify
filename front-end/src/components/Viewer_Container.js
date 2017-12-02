@@ -190,6 +190,7 @@ class Viewer_Container extends Component {
                 album_covers={albums}
                 ar_id={ar_id}
                 callback={this.props.update}
+                onArtistClick={this.props.onArtistClick}
               />
             </div>
           </Row>
