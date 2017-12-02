@@ -51,7 +51,6 @@ class Viewer_Artist_Container extends Component {
               {this.state.album_covers.map(function(d,i) {
                 let bla = d.songs;
                   {bla.map(function(s,j) {
-                    console.log(s.songName)
                     return(
                       <Viewer_Queue_Component
                                 key={j}

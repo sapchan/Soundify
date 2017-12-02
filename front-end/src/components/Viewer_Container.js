@@ -52,6 +52,7 @@ class Viewer_Container extends Component {
         friendsPlaylist: nextProps.friends_playlist,
         artist_info: nextProps.artist_info
       })
+      console.log(nextProps.artist_info);
     }
   }
 
@@ -95,13 +96,12 @@ class Viewer_Container extends Component {
                 <tbody>
                 {this.state.data.map(function(s, i)
                   {
-                    console.log(s)
                     return (<Viewer_Queue_Component
                               key={i}
-                              songID={s.so_id}
+                              songID={s.song_key}
                               song={s.title}
-                              artist={s.name}
-                              artist_id={s.ar_id}
+                              artist={s.artist}
+                              artist_id={s.artist_id}
                               duration={s.duration}
                               callback={this.updateCurrentSong}
                               onArtistClick={this.props.onArtistClick}

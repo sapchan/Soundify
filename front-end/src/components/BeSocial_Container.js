@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import BeSocial_Friend_Item from './BeSocial_Friend_Item';
+import { Grid, Button, Row, Col, Panel, Table, thead,tbody, Form, FormControl } from 'react-bootstrap';
+
 
 class BeSocial_Container extends Component {
   constructor(props) {
@@ -29,6 +31,9 @@ class BeSocial_Container extends Component {
   render() {
     return (
       <div className="BeSocial_Container">
+        <Grid>
+          <Button onClick={this.props.logout}>Log Out</Button>
+          <h3></h3>
           <h3>Friends</h3>
           <hr></hr>
           <div>
@@ -42,6 +47,7 @@ class BeSocial_Container extends Component {
           )
             }.bind(this))}
           </div>
+        </Grid>
       </div>
     );
   }

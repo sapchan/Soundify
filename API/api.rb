@@ -1,5 +1,6 @@
 # api.rb
 require 'sinatra'
+require 'sinatra/cors'
 require 'sequel'
 require 'json'
 require 'base64'
@@ -8,25 +9,25 @@ require 'execjs'
 
 DB = Sequel.connect(:adapter => 'mysql2', :user => 'soundify', :password=>'tomozpan', :host => 'soundify.ccj707h8lkgk.us-east-1.rds.amazonaws.com', :database => 'soundify')
 
-before do
-	response.headers['Access-Control-Allow-Origin'] = '*'
-end
+set :allow_origin, "*"
+set :allow_methods, "GET,HEAD,POST"
+set :allow_headers, "content-type,if-modified-since"
+set :expose_headers, "location,link"
 
 #get all songs in playlist pl_id
 get '/playlist/:pl_id' do
-    if params['pl_id'] == '123'
-			playlist = [{:title => 'Capsize', :artist => 'FRENSHIP', :artist_id => 12, :duration => 237, :song_key => 123},{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
-		elsif params['pl_id'] == '132'
-			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
-		else
-			query = "SELECT * FROM Song NATURAL JOIN (SELECT *, Album.title AS Atitle FROM PlaylistSong WHERE pl_id = '#{params['pl_id']}') AS sons NATURAL JOIN Artist JOIN Album ON(Song.al_id = Album.al_id)"
+#    begin
+			query = "SELECT SO.s_title, SO.popularity, SO.so_id, Artist.name, Artist.ar_id FROM (SELECT DISTINCT so_id FROM PlaylistSong WHERE pl_id = '#{params['pl_id']}') AS PS NATURAL JOIN (SELECT Song.title AS s_title, Song.popularity, Song.so_id, Song.al_id FROM Song) AS SO NATURAL JOIN (SELECT Album.al_id, Album.ar_id FROM Album) AS AL NATURAL JOIN Artist"
 			songs = DB[query]
 			playlist = []
-			for each song in songs
-				playlist << {:title => song[:title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
+			for song in songs
+				playlist << {:title => song[:s_title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
 			end
-		end
-		JSON.generate(playlist)
+			JSON.generate(playlist)
+#		rescue
+#			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
+#			JSON.generate(playlist)
+#		end
 end
 #get all playlist information from usr_id
 get '/getListPlaylist/:usr_id' do
@@ -117,21 +118,25 @@ post '/signup' do
 end
 
 post '/login' do
-	if params['username'] and params['password']
-		if DB["SELECT * FROM User WHERE User.username = '#{params['username']}' AND User.password = '#{params['password']}'"].count == 1
-			{ 'token1'=>Base64.encode64(params['username']), 'token2'=>Base64.encode64(params['password']) }.to_json
-		else
-			{'error'=>'invalid username and password'}.to_json
-		end
+	my_has = JSON.parse(request.body.read)
+	user = my_has['username']
+	pass = my_has['password']
+	query = "SELECT * FROM User WHERE User.username = '#{user}' AND User.password = '#{pass}'"
+	if DB[query].count == 1
+	  dataset = DB[query]
+	  us_id = dataset.map(:us_id)[0]
+	  { 'token1'=>Base64.encode64(user), 'token2'=>Base64.encode64(pass), 'us_id'=> us_id, 'flag' => true}.to_json
 	else
-		{'error'=>'user not found'}.to_json
-    end
+	  {'error'=>'invalid username and password', 'flag' => false}.to_json
+	end
 end
+
 # add a friend to user's list of friends based on usr_id
 post '/addFriend/:usr_id' do
 	# add the friend to the database. THe usr_id is the user's id. The friend is in the post information with the tag of 'friend'. Add the user.
 	query = "INSERT INTO Following (follower, followed) VALUES ('#{params['usr_id']}', '#{params['friend']}')" ##### we need to know who the person is who is initiating the follow
 end
+
 post '/something_secure/' do # someome submits a form to /something_secure using post
     # there's a field in a form where the name in the form tag is post_from_html_key
     puts params['post_from_html_key'] # <input type='password' name='post_from_html_key' />
@@ -141,7 +146,7 @@ post '/something_secure/' do # someome submits a form to /something_secure using
 end
 
 def getQueueForUser(usr_id)
-	query = "SELECT Song.title, Artist.name, Artist.ar_id, Song.popularity AS duration, Song.so_id FROM Queue, Song, Album, Artist WHERE Queue.so_id = Song.so_id AND Song.al_id = Album.al_id AND Album.ar_id = Artist.ar_id AND Queue.us_id = '#{usr_id}'"
+	query = "SELECT Song.title, Artist.name AS artist, Artist.ar_id AS artist_id, Song.popularity AS duration, Song.so_id FROM Queue, Song, Album, Artist WHERE Queue.so_id = Song.so_id AND Song.al_id = Album.al_id AND Album.ar_id = Artist.ar_id AND Queue.us_id = '#{usr_id}'"
 	playlist_name_tupule = DB[query]
 	playlist = []
 	playlist_name_tupule.each { |x|  playlist.push(x)}

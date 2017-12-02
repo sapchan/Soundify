@@ -7,68 +7,23 @@ import Player_Container from './components/Player_Container';
 import BeSocial_Container from './components/BeSocial_Container';
 import './assets/main.css'
 
-import { Grid, Button, Row, Col, Panel } from 'react-bootstrap';
+import { Grid, Button, Row, Col, Panel, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      login: false,
+      username: '',
+      password: '',
       name: 'test',
       user_id: 0,
-      playlist: [{
-            "name": "playlist 1",
-            "pl_id": 123
-        },
-        {
-            "name": "playlist 2",
-            "pl_id": 132
-        }],
-      friends: [{
-            "username": "friend 1",
-            "us_id": 1
-        },
-        {
-            "username": "friend 2",
-            "us_id": 2
-        }],
-      friends_playlist:[{
-            "playlistName": "playlist 1",
-            "playlist_id": 123
-        },
-        {
-            "playlistName": "playlist 2",
-            "playlist_id": 132
-        }],
-      queue: [
-        {
-          "title": "Song 1",
-          "name": "Creator 1",
-          "duration": 132,
-          "so_id": 1
-        },
-        {
-          "title": "Song 2",
-          "name": "Creator 2",
-          "duration": 273,
-          "so_id": 2,
-        }
-      ],
-      artist_info: [
-          {
-            'Name': 'name',
-            'artist_id' : 0,
-            'Description': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis hendrerit ipsum, at maximus est. Maecenas consequat consectetur orci, in laoreet dolor gravida in. Cras suscipit semper ex, eget consequat libero interdum ac. Nam sed posuere ligula. Vivamus vel sem ut neque imperdiet congue. Quisque ac dolor a risus laoreet elementum. Duis lacinia risus odio, ac varius mi sagittis sit amet. Vestibulum ut diam fringilla, maximus libero eget, tincidunt nulla. Integer eleifend odio et elementum pretium. Nulla id erat vulputate, volutpat mi at, consequat magna. Vestibulum id dolor in tellus lobortis porta. Mauris a pulvinar felis, euismod bibendum urna. Proin ac magna interdum, suscipit tortor ac, faucibus erat.',
-            'Albums': [
-              {
-                'album_title': 'album 1',
-                'songs': [{
-                    'songName': 'Song 1',
-                    'song_key': 0,
-                    'duration': 0
-                    }]
-                }]
-          }],
+      playlist: [],
+      friends: [],
+      friends_playlist:[],
+      queue: [],
+      artist_info: [],
       queueView: true,
       friendView: false,
       artistView: false,
@@ -83,12 +38,17 @@ class App extends Component {
     this.getFriendPlaylist = this.getFriendPlaylist.bind(this);
     this.viewFriendsSongsInPlaylist = this.viewFriendsSongsInPlaylist.bind(this);
     this.getArtistInformation = this.getArtistInformation.bind(this);
+    this.handleChangeUsr = this.handleChangeUsr.bind(this);
+    this.handleChangePswd = this.handleChangePswd.bind(this);
+    this.authenticate = this.authenticate.bind(this);
+    this.Initialize = this.Initialize.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   // This initializes all of the information when a user logs in based on what their user id is.
   // Informaiton includes their playlists, previous queue, their friends, and what their current song is
-  componentWillMount(){
-    let location = 'http://localhost:4567/initialize/' + '2cc029a1-feb2-471e-98ad-94f55111b8d7';
+  Initialize(user_id){
+    let location = 'http://localhost:4567/initialize/' + user_id;
     axios.get(location).then(function (response) {
       let information = response.data[0];
       let name = information['username'];
@@ -97,7 +57,7 @@ class App extends Component {
       let queue = information['queue']
       this.setState({
         name: name,
-        user_id: '2cc029a1-feb2-471e-98ad-94f55111b8d7',
+        user_id: user_id,
         playlist: playlist,
         friends: friends,
         queue: queue
@@ -124,10 +84,10 @@ class App extends Component {
       this.setState({
         queue: queue
       });
+      if(this.state.queueView != true) {
+        this.changeToPlaylist();
+      }
     }.bind(this));
-    if(this.state.queueView != true) {
-      this.changeToPlaylist();
-    }
   }
 
   // This gets the queue at the beginning. Will be useful when a song finishes, so we can play the next song in line
@@ -135,13 +95,15 @@ class App extends Component {
     let location = 'http://localhost:4567/queue/' + this.state.user_id;
     axios.get(location).then(function (response) {
       let queue = response.data[0].queue;
+      console.log(queue)
       this.setState({
         queue: queue
       });
+      if(this.state.queueView != true) {
+        this.changeToPlaylist();
+      }
     }.bind(this));
-    if(this.state.queueView != true) {
-      this.changeToPlaylist();
-    }
+
   }
 
   // When an artist is clicked on, the artist view should be triggered
@@ -150,12 +112,12 @@ class App extends Component {
     axios.get(location).then(function (response) {
       let artist_info = response.data.artistInfo;
       this.setState({
-        artist_info: artist_info
+        artist_info: artist_info,
       });
+      if(this.state.artistView !== true) {
+        this.changeToArtist();
+      }
     }.bind(this));
-    if(this.state.artistView != true) {
-      this.changeToArtist();
-    }
   }
 
   // When a song's play button is clicked, this method updates the song id that
@@ -186,10 +148,11 @@ class App extends Component {
       this.setState({
         friends_playlist: friends_playlist
       });
+      if(this.state.friendView != true) {
+        this.changeToFriend();
+      }
     }.bind(this));
-    if(this.state.friendView != true) {
-      this.changeToFriend();
-    }
+
   }
 
   // change all views to playlistView
@@ -244,8 +207,64 @@ class App extends Component {
     this.getPlaylist(playlist_id)
   }
 
+  handleChangeUsr(evt){
+    let usr = evt.target.value;
+    this.setState({
+      username: usr
+    })
+  }
+
+  handleChangePswd(evt) {
+    let pswd = evt.target.value;
+    this.setState({
+      password: pswd
+    })
+  }
+
+  authenticate(){
+    let username = this.state.username;
+    let password = this.state.password;
+    let location = 'http://localhost:4567/login';
+    axios.post(location, {
+      username: username,
+      password: password
+    }).then(function(response){
+      let token1 = response.data.token1;
+      let token2 = response.data.token2;
+      let us_id = response.data.us_id;
+      let flag = response.data.flag;
+      if(flag == true) {
+        this.setState({
+          user_id: us_id,
+          login: true,
+        });
+      }
+      this.Initialize(us_id);
+    }.bind(this));
+  }
+
+  logout(){
+    this.setState({
+      login: false,
+      username: '',
+      password: '',
+      name: 'test',
+      user_id: 0,
+      playlist: [],
+      friends: [],
+      friends_playlist:[],
+      queue: [],
+      artist_info: [],
+      queueView: true,
+      friendView: false,
+      artistView: false,
+      curSong: 1
+    });
+  }
+
   render() {
-    return (
+    if(this.state.login == true) {
+      return (
       <div className="App">
         <Grid fluid={true}>
           <Row>
@@ -274,6 +293,7 @@ class App extends Component {
               <BeSocial_Container
                 data={this.state.friends}
                 getFriendPlaylist={this.getFriendPlaylist}
+                logout={this.logout}
               />
             </Col>
           </Row>
@@ -282,7 +302,40 @@ class App extends Component {
           </Row>
         </Grid>
       </div>
-    );
+      );
+    }
+    else {
+      return(
+        <div className="App Login">
+          <Grid>
+          <form>
+          <FormGroup controlId="email" bsSize="large">
+            <ControlLabel>Username</ControlLabel>
+            <FormControl
+              autoFocus
+              type="username"
+              onChange={this.handleChangeUsr}
+            />
+          </FormGroup>
+          <FormGroup controlId="password" bsSize="large">
+            <ControlLabel>Password</ControlLabel>
+            <FormControl
+              onChange={this.handleChangePswd}
+              type="password"
+            />
+          </FormGroup>
+          <Button
+            block
+            bsSize="large"
+            onClick={this.authenticate}
+            >
+            Login
+          </Button >
+        </form>
+        </Grid>
+        </div>
+      );
+    }
   }
 }
 
