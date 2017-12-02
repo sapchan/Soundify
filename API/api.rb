@@ -146,7 +146,7 @@ post '/something_secure/' do # someome submits a form to /something_secure using
 end
 
 def getQueueForUser(usr_id)
-	query = "SELECT Song.title, Artist.name AS artist, Artist.ar_id AS artist_id, Song.popularity AS duration, Song.so_id FROM Queue, Song, Album, Artist WHERE Queue.so_id = Song.so_id AND Song.al_id = Album.al_id AND Album.ar_id = Artist.ar_id AND Queue.us_id = '#{usr_id}'"
+	query = "SELECT Song.title, Artist.name AS artist, Artist.ar_id AS artist_id, Song.popularity AS duration, Song.so_id AS song_key FROM Queue, Song, Album, Artist WHERE Queue.so_id = Song.so_id AND Song.al_id = Album.al_id AND Album.ar_id = Artist.ar_id AND Queue.us_id = '#{usr_id}'"
 	playlist_name_tupule = DB[query]
 	playlist = []
 	playlist_name_tupule.each { |x|  playlist.push(x)}

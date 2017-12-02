@@ -96,6 +96,7 @@ class Viewer_Container extends Component {
                 <tbody>
                 {this.state.data.map(function(s, i)
                   {
+                    console.log(s);
                     return (<Viewer_Queue_Component
                               key={i}
                               songID={s.song_key}
@@ -188,6 +189,7 @@ class Viewer_Container extends Component {
                 artist_description={description}
                 album_covers={albums}
                 ar_id={ar_id}
+                callback={this.props.update}
               />
             </div>
           </Row>

@@ -73,14 +73,15 @@ class Viewer_Artist_Container extends Component {
                         artist={s.artistName}
                         artist_id={s.ar_id}
                         duration={s.duration}
+                        callback={this.props.callback}
                       />
-                      );}
+                  );}.bind(this)
                     )}
                       </tbody>
                     </Table>
                   </div>
                  );
-              })
+              }.bind(this))
             }
             </Grid>
             </div>
