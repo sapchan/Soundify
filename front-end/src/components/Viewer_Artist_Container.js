@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Viewer_Queue_Component from './Viewer_Queue_Component';
-import { Grid, Button, Row, Col, Panel, tr, td } from 'react-bootstrap';
+import { Grid, Button, Row, Col, Panel, tr, td, Table } from 'react-bootstrap';
 
 class Viewer_Artist_Container extends Component {
   constructor(props) {
@@ -48,21 +48,38 @@ class Viewer_Artist_Container extends Component {
               <h3>{this.state.artist_name}</h3>
               <hr></hr>
               <p>{this.state.artist_description}</p>
+              <hr></hr>
+
               {this.state.album_covers.map(function(d,i) {
                 let bla = d.songs;
+                return(
+                  <div className='Viewer_Queue'>
+                    <Table striped={true} responsive={true}>
+                      <thead>
+                        <tr>
+                          <th>Song</th>
+                          <th>Artist</th>
+                          <th>Popularity</th>
+                          <th>Play</th>
+                        </tr>
+                      </thead>
+                      <tbody>
                   {bla.map(function(s,j) {
                     return(
                       <Viewer_Queue_Component
-                                key={j}
-                                songID={s.song_key}
-                                song={s.songName}
-                                artist={s.artistName}
-                                artist_id={s.ar_id}
-                                duration={s.duration}
-
-                        />
-                    );}
-                  )}
+                        key={j}
+                        songID={s.song_key}
+                        song={s.songName}
+                        artist={s.artistName}
+                        artist_id={s.ar_id}
+                        duration={s.duration}
+                      />
+                      );}
+                    )}
+                      </tbody>
+                    </Table>
+                  </div>
+                 );
               })
             }
             </Grid>

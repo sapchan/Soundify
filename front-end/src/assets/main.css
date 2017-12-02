@@ -1,10 +1,10 @@
 .Viewer_Container {
   height: 90vh;
+  overflow-y:scroll;
 }
 
 .Viewer_Queue {
   padding-top:2vh;
-  
 }
 
 .playlist_item {
@@ -18,6 +18,11 @@
 .PlayList_Container {
   /** background-color: #40ABA6; **/
   height:90vh;
+  overflow-y: scroll;
+}
+
+.BeSocial_Container {
+  overflow-y: scroll;
 }
 
 body {

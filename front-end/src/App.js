@@ -95,7 +95,6 @@ class App extends Component {
     let location = 'http://localhost:4567/queue/' + this.state.user_id;
     axios.get(location).then(function (response) {
       let queue = response.data[0].queue;
-      console.log(queue)
       this.setState({
         queue: queue
       });

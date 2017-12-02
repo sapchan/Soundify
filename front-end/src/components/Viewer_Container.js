@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Viewer_Queue_Component from './Viewer_Queue_Component';
 import Viewer_Friend_Component from './Viewer_Friend_Component';
 import Viewer_Artist_Container from './Viewer_Artist_Container';
+import '../assets/main.css'
 import { Grid, Button, Row, Col, Panel, Table, thead,tbody, Form, FormControl } from 'react-bootstrap';
 
 class Viewer_Container extends Component {
@@ -52,7 +53,6 @@ class Viewer_Container extends Component {
         friendsPlaylist: nextProps.friends_playlist,
         artist_info: nextProps.artist_info
       })
-      console.log(nextProps.artist_info);
     }
   }
 
