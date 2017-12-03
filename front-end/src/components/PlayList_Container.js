@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PlaylistItem_Component from './PlaylistItem_Component';
-import { Grid, Button, Row, Col, Panel } from 'react-bootstrap';
+import { Grid, Button, Row, Col, Panel, FormControl } from 'react-bootstrap';
 
 class PlayList_Container extends Component {
   constructor(props) {
@@ -8,9 +8,12 @@ class PlayList_Container extends Component {
     this.send_PlayList_id_Up = this.send_PlayList_id_Up.bind(this);
     this.state = {
       playlists: undefined,
-      name: undefined
+      name: undefined,
+      new_pl_name: undefined
     };
     this.handleClick = this.handleClick.bind(this);
+    this.text = this.text.bind(this);
+    this.createPlaylist = this.createPlaylist.bind(this);
   }
 
   componentWillMount(){
@@ -41,6 +44,17 @@ class PlayList_Container extends Component {
     this.props.getQueue();
   }
 
+  text(evt) {
+    let new_pl_name = evt.target.value;
+    this.setState({
+      new_pl_name: new_pl_name
+    })
+  }
+
+  createPlaylist() {
+    this.props.createPlaylist(this.state.new_pl_name)
+  }
+
   render() {
     const data = this.props.data;
     return (
@@ -50,7 +64,11 @@ class PlayList_Container extends Component {
           <hr></hr>
           <a onClick={this.handleClick} className="playlist_item"><h4>Queue</h4></a>
           <hr></hr>
-          <h4>Your Playlists</h4> <Button onClick={this.props.createPlaylist}>+</Button>
+          <h4>Your Playlists</h4>
+          <Row>
+            <FormControl type="text" onChange={this.text} />
+            <Button bsSize="small" onClick={this.createPlaylist}>+</Button>
+          </Row>
           <div>
             {this.state.playlists.map(function(d, i){
               return (<PlaylistItem_Component
