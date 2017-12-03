@@ -14,7 +14,8 @@ class Viewer_Container extends Component {
       friendView: false,
       artistView: false,
       friendsPlaylist: undefined,
-      artist_info: undefined
+      artist_info: undefined,
+      playlist: undefined
     };
     this.updateCurrentSong = this.updateCurrentSong.bind(this);
     this.viewFriendsPlaylist = this.viewFriendsPlaylist.bind(this);
@@ -27,13 +28,15 @@ class Viewer_Container extends Component {
     let artistView = this.props.artistView;
     let friendsPlaylist = this.props.friends_playlist;
     let artist_info = this.props.artist_info;
+    let playlist = this.props.playlist;
     this.setState({
       data: data,
       playerView: queueView,
       friendView: friendView,
       artistView: artistView,
       friendsPlaylist: friendsPlaylist,
-      artist_info: artist_info
+      artist_info: artist_info,
+      playlist: playlist
     });
   }
 
@@ -43,7 +46,8 @@ class Viewer_Container extends Component {
        this.props.friendView !== nextProps.friendView ||
        this.props.artistView !== nextProps.artistView ||
        this.props.friends_playlist !== nextProps.friends_playlist ||
-       this.props.artist_info !== nextProps.artist_info
+       this.props.artist_info !== nextProps.artist_info ||
+       this.props.playlist !== nextProps.playlist
     ) {
       this.setState({
         data: nextProps.data,
@@ -51,7 +55,8 @@ class Viewer_Container extends Component {
         friendView: nextProps.friendView,
         artistView: nextProps.artistView,
         friendsPlaylist: nextProps.friends_playlist,
-        artist_info: nextProps.artist_info
+        artist_info: nextProps.artist_info,
+        playlist: nextProps.playlist
       })
     }
   }
@@ -90,7 +95,7 @@ class Viewer_Container extends Component {
                     <th>Song</th>
                     <th>Artist</th>
                     <th>Popularity</th>
-                    <th>Play</th>
+                    <th>Options</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,6 +110,8 @@ class Viewer_Container extends Component {
                               duration={s.duration}
                               callback={this.updateCurrentSong}
                               onArtistClick={this.props.onArtistClick}
+                              playlist={this.state.playlist}
+                              addSongToPlaylist={this.props.addSongToPlaylist}
                             />);
                   }.bind(this)
                 )}
@@ -146,8 +153,8 @@ class Viewer_Container extends Component {
                   {
                     return (<Viewer_Friend_Component
                               key={i}
-                              playlist={s.playlistName}
-                              playlist_id={s.playlist_id}
+                              playlist={s.name}
+                              playlist_id={s.pl_id}
                               sendUp={this.viewFriendsPlaylist}
                     />);
                   }.bind(this)

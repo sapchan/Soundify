@@ -23,6 +23,7 @@ class Viewer_Friend_Component extends Component {
   componentWillReceiveProps(nextProps) {
     if(this.props.playlist !== nextProps.playlist ||
        this.props.playlist_id !== nextProps.playlist_id)  {
+         console.log(nextProps.playlist_id)
       this.setState({
         playlist: nextProps.playlist,
         playlist_id: nextProps.playlist_id

@@ -16,7 +16,6 @@ set :expose_headers, "location,link"
 
 #get all songs in playlist pl_id
 get '/playlist/:pl_id' do
-#    begin
 			query = "SELECT SO.s_title, SO.popularity, SO.so_id, Artist.name, Artist.ar_id FROM (SELECT DISTINCT so_id FROM PlaylistSong WHERE pl_id = '#{params['pl_id']}') AS PS NATURAL JOIN (SELECT Song.title AS s_title, Song.popularity, Song.so_id, Song.al_id FROM Song) AS SO NATURAL JOIN (SELECT Album.al_id, Album.ar_id FROM Album) AS AL NATURAL JOIN Artist"
 			songs = DB[query]
 			playlist = []
@@ -24,10 +23,6 @@ get '/playlist/:pl_id' do
 				playlist << {:title => song[:s_title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
 			end
 			JSON.generate(playlist)
-#		rescue
-#			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
-#			JSON.generate(playlist)
-#		end
 end
 #get all playlist information from usr_id
 get '/getListPlaylist/:usr_id' do
@@ -109,6 +104,7 @@ get '/initialize/:usr_id' do
 	info = [:username => username, :playlist => playlist, :friends => friends, :queue => queue]
 	JSON[info]
 end
+
 post '/signup' do
 	if params['username'] and params['password']
 		DB.run("INSERT INTO User(us_id, username, password) VALUES ('#{SecureRandom.uuid}','#{params['username']}','#{params['password']}')")
@@ -131,7 +127,6 @@ post '/login' do
 	  {'error'=>'invalid username and password', 'flag' => false}.to_json
 	end
 end
-
 # add a friend to user's list of friends based on usr_id
 post '/addFriend/:usr_id' do
 	# add the friend to the database. THe usr_id is the user's id. The friend is in the post information with the tag of 'friend'. Add the user.
@@ -144,6 +139,15 @@ post '/something_secure/' do # someome submits a form to /something_secure using
     # puts prints stuff out to the serve console, nothing is returned to the user
     # if you want to return something, do:
     #json {'keyyy': 'a test value'} # send a hash (dict) over json
+end
+
+post '/addSongToPlaylist' do
+	my_has = JSON.parse(request.body.read)
+	so_id = my_has['so_id']
+	pl_id = my_has['pl_id']
+	puts so_id
+	puts pl_id
+	DB.run("INSERT INTO PlaylistSong(pl_id, so_id) VALUES ('#{pl_id}', '#{so_id}')")
 end
 
 def getQueueForUser(usr_id)

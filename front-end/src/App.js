@@ -43,6 +43,7 @@ class App extends Component {
     this.authenticate = this.authenticate.bind(this);
     this.Initialize = this.Initialize.bind(this);
     this.logout = this.logout.bind(this);
+    this.addSongToPlaylist = this.addSongToPlaylist.bind(this);
   }
 
   // This initializes all of the information when a user logs in based on what their user id is.
@@ -261,6 +262,22 @@ class App extends Component {
     });
   }
 
+  addSongToPlaylist(pl_id, so_id){
+    let location = 'http://localhost:4567/addSongToPlaylist';
+    axios.post(location, {
+      pl_id: pl_id,
+      so_id: so_id
+    }).then(function(response){
+        let location = 'http://localhost:4567/getListPlaylist/' + this.state.user_id;
+        axios.get(location).then(function (response) {
+          let playlist = response.data;
+          this.setState({
+            playlist: playlist
+          });
+        }.bind(this));
+    }.bind(this));
+  }
+
   render() {
     if(this.state.login == true) {
       return (
@@ -286,6 +303,8 @@ class App extends Component {
                   update={this.update_player_with_song}
                   viewSongs={this.viewFriendsSongsInPlaylist}
                   onArtistClick={this.getArtistInformation}
+                  playlist={this.state.playlist}
+                  addSongToPlaylist={this.addSongToPlaylist}
                 />
             </Col>
             <Col md={1}>
