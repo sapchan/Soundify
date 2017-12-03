@@ -27,7 +27,9 @@ class App extends Component {
       queueView: true,
       friendView: false,
       artistView: false,
-      curSong: 1
+      curSong: 1,
+      token1: '',
+      token2: ''
     };
     this.getPlaylist = this.getPlaylist.bind(this);
     this.getQueue = this.getQueue.bind(this);
@@ -51,19 +53,23 @@ class App extends Component {
   // This initializes all of the information when a user logs in based on what their user id is.
   // Informaiton includes their playlists, previous queue, their friends, and what their current song is
   Initialize(user_id){
-    let location = 'http://localhost:4567/initialize/' + user_id;
+    let location = 'http://localhost:4567/initialize/' + user_id + '/' + this.state.token1 + '/' + this.state.token2;
     axios.get(location).then(function (response) {
-      let information = response.data[0];
+      let information = response.data;
       let name = information['username'];
       let playlist = information['playlist'];
       let friends = information['friends'];
       let queue = information['queue']
+      let token1 = information['token1']
+      let token2 = information['token2']
       this.setState({
         name: name,
         user_id: user_id,
         playlist: playlist,
         friends: friends,
-        queue: queue
+        queue: queue,
+        token1: token1,
+        token2: token2
       });
     }.bind(this));
   }
@@ -81,7 +87,7 @@ class App extends Component {
 
   // This gets all of the songs in a specific playlist
   getPlaylist(playList_id) {
-    let location = 'http://localhost:4567/playlist/' + playList_id;
+    let location = 'http://localhost:4567/playlist/' + playList_id + '/' + this.state.token1 + '/' + this.state.token2;
     axios.get(location).then(function (response) {
       let queue = response.data;
       this.setState({
@@ -95,7 +101,7 @@ class App extends Component {
 
   // This gets the queue at the beginning. Will be useful when a song finishes, so we can play the next song in line
   getQueue(){
-    let location = 'http://localhost:4567/queue/' + this.state.user_id;
+    let location = 'http://localhost:4567/queue/' + this.state.user_id + '/' + this.state.token1 + '/' + this.state.token2;
     axios.get(location).then(function (response) {
       let queue = response.data[0].queue;
       this.setState({
@@ -110,7 +116,7 @@ class App extends Component {
 
   // When an artist is clicked on, the artist view should be triggered
   getArtistInformation(artist_id){
-    let location = 'http://localhost:4567/getArtistInformation/' + artist_id;
+    let location = 'http://localhost:4567/getArtistInformation/' + artist_id + '/' + this.state.token1 + '/' + this.state.token2;
     axios.get(location).then(function (response) {
       let artist_info = response.data.artistInfo;
       this.setState({
@@ -144,7 +150,7 @@ class App extends Component {
 
   // this gets all the playlists for a friends
   getFriendPlaylist(user_id){
-    let location = 'http://localhost:4567/getListPlaylist/' + user_id;
+    let location = 'http://localhost:4567/getListPlaylist/' + user_id + '/' + this.state.token1 + '/' + this.state.token2;
     axios.get(location).then(function (response) {
       let friends_playlist = response.data;
       this.setState({
@@ -293,7 +299,7 @@ class App extends Component {
   }
 
   createPlaylist(name) {
-    let location = 'http://localhost:4567/addSongToPlaylist';
+    let location = 'http://localhost:4567/createPlaylist';
     axios.post(location, {
       us_id: this.state.user_id,
       pl_name: name

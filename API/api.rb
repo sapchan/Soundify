@@ -15,7 +15,7 @@ set :allow_headers, "content-type,if-modified-since"
 set :expose_headers, "location,link"
 
 #get all songs in playlist pl_id
-get '/playlist/:pl_id' do
+get '/playlist/:pl_id/:token1/:token2' do
 	error_hash = checkToken(params)
 	if error_hash['error'] == 5
 		error_hash.to_json
@@ -31,7 +31,7 @@ get '/playlist/:pl_id' do
 end
 
 #get all playlist information from usr_id
-get '/getListPlaylist/:usr_id' do
+get '/getListPlaylist/:usr_id/:token1/:token2' do
 	error_hash = checkToken(params)
 	if error_hash['error'] == 5
 		error_hash.to_json
@@ -44,7 +44,7 @@ get '/getListPlaylist/:usr_id' do
 end
 
 #get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
-get '/getArtistInformation/:ar_id' do
+get '/getArtistInformation/:ar_id/:token1/:token2' do
 	error_hash = checkToken(params)
 	if error_hash['error'] == 5
 		error_hash.to_json
@@ -121,7 +121,7 @@ post '/createPlaylist' do
 	JSON[info]
 end
 # get the queue of a user
-get '/queue/:usr_id' do
+get '/queue/:usr_id/:token1/:token2' do
 	error_hash = checkToken(params)
 	if error_hash['error'] == 5
 		error_hash.to_json
@@ -133,7 +133,7 @@ get '/queue/:usr_id' do
 end
 
 # get all of the information about a user
-get '/initialize/:usr_id' do
+get '/initialize/:usr_id/:token1/:token2' do
 	#This needs to get all of the information about a specific user based on the user id
 	error_hash = checkToken(params)
 	if error_hash['error'] == 5
@@ -146,6 +146,8 @@ get '/initialize/:usr_id' do
 		info = {:username => username, :playlist => playlist, :friends => friends, :queue => queue}
 		JSON[info.merge(error_hash)]
 	end
+		JSON[info]
+
 end
 
 post '/signup' do
@@ -162,8 +164,9 @@ post '/signup' do
 end
 
 post '/login' do
-	user = params['username']
-	pass = params['password']
+	my_has = JSON.parse(request.body.read)
+	user = my_has['username']
+	pass = my_has['password']
 	query = "SELECT * FROM User WHERE User.username = '#{user}' AND User.password = '#{pass}'"
 	if DB[query].count == 1
 	  dataset = DB[query]

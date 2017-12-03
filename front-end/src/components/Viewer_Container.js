@@ -168,6 +168,7 @@ class Viewer_Container extends Component {
       );
     } else {
       let info = this.state.artist_info;
+      console.log(this.state);
       let artistName = info[0].Name;
       let description = info[0].Description;
       let albums = info[0].Albums;
