@@ -124,11 +124,11 @@ end
 # search for songs and users
 get '/search/:term' do
 	term = params['term']
-	querySongs = "SELECT *, Album.title AS atitle FROM (SELECT * FROM Song WHERE title LIKE '%#{term}%') AS so NATURAL JOIN Artist JOIN Album ON(so.al_id = Album.al_id)"
-	queryUsers = "SELECT * FROM User WHERE username LIKE '%#{term}%'"
+	querySongs = "SELECT *, Album.title AS atitle FROM (SELECT * FROM Song WHERE title LIKE ?) AS so NATURAL JOIN Artist JOIN Album ON(so.al_id = Album.al_id)"
+	queryUsers = "SELECT * FROM User WHERE username LIKE ?"
 	begin
-		songsf = DB[querySongs]
-		usersf = DB[queryUsers]
+		songsf = DB[querySongs, "%#{term}%"]
+		usersf = DB[queryUsers, "%#{term}%"]
 		songs = []
 		users = []
 		songsf.each do |key, song|
