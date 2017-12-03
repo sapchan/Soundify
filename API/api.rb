@@ -181,10 +181,14 @@ post '/signup' do
 		user = my_has['username']
 		pass = my_has['password']
 		begin
-			DB.run("INSERT INTO User(us_id, username, password) VALUES ('#{us_id}','#{user}','#{pass}')")
-			{ 'token1'=>Base64.encode64(user), 'token2'=>Base64.encode64(pass), 'us_id'=> us_id, 'flag' => true }.to_json
+			if DB["SELECT * FROM User WHERE User.username = '#{user}'"].count != 0
+				{'error'=>1, 'flag' => false}.to_json
+			else
+				DB.run("INSERT INTO User(us_id, username, password) VALUES ('#{us_id}','#{user}','#{pass}')")
+				{ 'token1'=>Base64.encode64(user), 'token2'=>Base64.encode64(pass), 'us_id'=> us_id, 'flag' => true }.to_json
+			end
 		rescue
-			{'error'=>'invalid username and password for signup', 'flag' => false}.to_json
+			{'error'=>2, 'flag' => false}.to_json
 		end
 end
 
