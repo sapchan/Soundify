@@ -19,6 +19,18 @@ class BeSocial_Friend_Item extends Component {
     });
   }
 
+  componentWillReceiveProps(nextProps){
+    if(
+      this.props.name !== nextProps.name ||
+      this.props.friend_key !== nextProps.friend_key
+    ) {
+      this.setState({
+        name: nextProps.name,
+        friend_key: nextProps.friend_key
+      })
+    }
+  }
+
   handleClick(){
     this.props.onFriendClick(this.state.friend_key);
   }

@@ -143,7 +143,7 @@ class App extends Component {
   getFriendPlaylist(user_id){
     let location = 'http://localhost:4567/getListPlaylist/' + user_id;
     axios.get(location).then(function (response) {
-      let friends_playlist = response.data.playlist;
+      let friends_playlist = response.data;
       this.setState({
         friends_playlist: friends_playlist
       });

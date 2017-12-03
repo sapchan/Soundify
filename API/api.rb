@@ -32,6 +32,7 @@ end
 #get all playlist information from usr_id
 get '/getListPlaylist/:usr_id' do
 	#get all the playlists for a specific user
+	puts params['usr_id']
 	playlist = getAllPlaylistsForUser(params['usr_id'])
 	JSON[playlist]
 end
