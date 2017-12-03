@@ -232,7 +232,19 @@ class Viewer_Container extends Component {
           </Row>
           <Row>
             <div className='Viewer_Queue'>
-              
+              <Table striped={true} responsive={true}>
+                <thead>
+                  <tr>
+                    <th>Song</th>
+                    <th>Artist</th>
+                    <th>Popularity</th>
+                    <th>Options</th>
+                  </tr>
+                </thead>
+                <tbody>
+                
+                </tbody>
+              </Table>
             </div>
           </Row>
           </Grid>
