@@ -110,10 +110,10 @@ post '/createPlaylist' do
 	my_has = JSON.parse(request.body.read)
 	user = my_has['us_id']
 	pl_name = my_has['pl_name']
-	pl_id = secureRandom.uuid
+	pl_id = SecureRandom.uuid
 	begin
-		DB["INSERT INTO Playlist (pl_id, us_id, name) VALUES ('#{pl_id}', '#{us_id}', '#{pl_name}')"]
-		playlists = getAllPlaylistsForUser(us_id)
+		DB["INSERT INTO Playlist (pl_id, us_id, name) VALUES ('#{pl_id}', '#{user}', '#{pl_name}')"]
+		playlists = getAllPlaylistsForUser(user)
 		info = [:error=>0, :playlists=>playlists]
 	rescue
 		info = [:error=>1]

@@ -67,9 +67,7 @@ class App extends Component {
         user_id: user_id,
         playlist: playlist,
         friends: friends,
-        queue: queue,
-        token1: token1,
-        token2: token2
+        queue: queue
       });
     }.bind(this));
   }
@@ -103,7 +101,7 @@ class App extends Component {
   getQueue(){
     let location = 'http://localhost:4567/queue/' + this.state.user_id + '/' + this.state.token1 + '/' + this.state.token2;
     axios.get(location).then(function (response) {
-      let queue = response.data[0].queue;
+      let queue = response.data.queue;
       this.setState({
         queue: queue
       });
@@ -235,6 +233,8 @@ class App extends Component {
         this.setState({
           user_id: us_id,
           login: true,
+          token1: token1,
+          token2: token2
         });
       }
       this.Initialize(us_id);
@@ -276,6 +276,8 @@ class App extends Component {
         this.setState({
           user_id: us_id,
           login: true,
+          token1: token1,
+          token2: token2
         });
       }
       this.Initialize(us_id);
@@ -305,6 +307,7 @@ class App extends Component {
       pl_name: name
     }).then(function(response){
         let error = response.data.error;
+        console.log(error)
         if(error == 0) {
           let playlist = response.data.playlist;
           this.setState({
