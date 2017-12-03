@@ -106,12 +106,16 @@ get '/initialize/:usr_id' do
 end
 
 post '/signup' do
-	if params['username'] and params['password']
-		DB.run("INSERT INTO User(us_id, username, password) VALUES ('#{SecureRandom.uuid}','#{params['username']}','#{params['password']}')")
-		{ 'token1'=>Base64.encode64(params['username']), 'token2'=>Base64.encode64(params['password']) }.to_json
-	else
-		{'error'=>'invalid username and password for signup'}.to_json
-	end
+		us_id = SecureRandom.uuid
+		my_has = JSON.parse(request.body.read)
+		user = my_has['username']
+		pass = my_has['password']
+		begin
+			DB.run("INSERT INTO User(us_id, username, password) VALUES ('#{us_id}','#{user}','#{pass}')")
+			{ 'token1'=>Base64.encode64(user), 'token2'=>Base64.encode64(pass), 'us_id'=> us_id, 'flag' => true }.to_json
+		rescue
+			{'error'=>'invalid username and password for signup', 'flag' => false}.to_json
+		end
 end
 
 post '/login' do
@@ -128,9 +132,20 @@ post '/login' do
 	end
 end
 # add a friend to user's list of friends based on usr_id
-post '/addFriend/:usr_id' do
+post '/addFriend' do
 	# add the friend to the database. THe usr_id is the user's id. The friend is in the post information with the tag of 'friend'. Add the user.
-	query = "INSERT INTO Following (follower, followed) VALUES ('#{params['usr_id']}', '#{params['friend']}')" ##### we need to know who the person is who is initiating the follow
+	my_has = JSON.parse(request.body.read)
+	usr_id = my_has['usr_id']
+	friend = my_has['friend']
+	begin
+		query = "INSERT INTO Following (follower, followed) VALUES ('#{params['usr_id']}', '#{params['friend']}')" ##### we need to know who the person is who is initiating the follow
+		DB[query]
+		friends = getAllFriendsForUser(params['usr_id'])
+		info = [:error => 0, :friends => friends]
+		JSON[info]
+	rescue
+		info=[:error => 1]
+	end
 end
 
 post '/something_secure/' do # someome submits a form to /something_secure using post

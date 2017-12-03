@@ -44,6 +44,7 @@ class App extends Component {
     this.Initialize = this.Initialize.bind(this);
     this.logout = this.logout.bind(this);
     this.addSongToPlaylist = this.addSongToPlaylist.bind(this);
+    this.signup = this.signup.bind(this);
   }
 
   // This initializes all of the information when a user logs in based on what their user id is.
@@ -262,6 +263,28 @@ class App extends Component {
     });
   }
 
+  signup(){
+    let username = this.state.username;
+    let password = this.state.password;
+    let location = 'http://localhost:4567/signup';
+    axios.post(location, {
+      username: username,
+      password: password
+    }).then(function(response){
+      let token1 = response.data.token1;
+      let token2 = response.data.token2;
+      let us_id = response.data.us_id;
+      let flag = response.data.flag;
+      if(flag == true) {
+        this.setState({
+          user_id: us_id,
+          login: true,
+        });
+      }
+      this.Initialize(us_id);
+    }.bind(this));
+  }
+
   addSongToPlaylist(pl_id, so_id){
     let location = 'http://localhost:4567/addSongToPlaylist';
     axios.post(location, {
@@ -348,6 +371,14 @@ class App extends Component {
             onClick={this.authenticate}
             >
             Login
+          </Button >
+          <Button
+            block
+            bsSize="large"
+            bsStyle="primary"
+            onClick={this.signup}
+            >
+            Signup
           </Button >
         </form>
         </Grid>
