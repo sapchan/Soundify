@@ -20,7 +20,6 @@ get '/playlist/:pl_id' do
 	if error_hash['error'] == 5
 		error_hash.to_json
 	else
-#    begin
 		query = "SELECT SO.s_title, SO.popularity, SO.so_id, Artist.name, Artist.ar_id FROM (SELECT DISTINCT so_id FROM PlaylistSong WHERE pl_id = '#{params['pl_id']}') AS PS NATURAL JOIN (SELECT Song.title AS s_title, Song.popularity, Song.so_id, Song.al_id FROM Song) AS SO NATURAL JOIN (SELECT Album.al_id, Album.ar_id FROM Album) AS AL NATURAL JOIN Artist"
 		songs = DB[query]
 		playlist = []
@@ -28,10 +27,6 @@ get '/playlist/:pl_id' do
 			playlist << {:title => song[:s_title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
 		end
 		JSON.generate(playlist)
-#		rescue
-#			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
-#			JSON.generate(playlist)
-#		end
 	end
 end
 
@@ -110,6 +105,21 @@ get '/getListFriends/:usr_id' do
 	#get all the friends for a specific user
 end
 
+# create new playlists
+post '/createPlaylist' do
+	my_has = JSON.parse(request.body.read)
+	user = my_has['us_id']
+	pl_name = my_has['pl_name']
+	pl_id = secureRandom.uuid
+	begin
+		DB["INSERT INTO Playlist (pl_id, us_id, name) VALUES ('#{pl_id}', '#{us_id}', '#{pl_name}')"]
+		playlists = getAllPlaylistsForUser(us_id)
+		info = [:error=>0, :playlists=>playlists]
+	rescue
+		info = [:error=>1]
+	end
+	JSON[info]
+end
 # get the queue of a user
 get '/queue/:usr_id' do
 	error_hash = checkToken(params)
