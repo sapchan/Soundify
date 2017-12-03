@@ -16,93 +16,126 @@ set :expose_headers, "location,link"
 
 #get all songs in playlist pl_id
 get '/playlist/:pl_id' do
-			query = "SELECT SO.s_title, SO.popularity, SO.so_id, Artist.name, Artist.ar_id FROM (SELECT DISTINCT so_id FROM PlaylistSong WHERE pl_id = '#{params['pl_id']}') AS PS NATURAL JOIN (SELECT Song.title AS s_title, Song.popularity, Song.so_id, Song.al_id FROM Song) AS SO NATURAL JOIN (SELECT Album.al_id, Album.ar_id FROM Album) AS AL NATURAL JOIN Artist"
-			songs = DB[query]
-			playlist = []
-			for song in songs
-				playlist << {:title => song[:s_title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
-			end
-			JSON.generate(playlist)
+	error_hash = checkToken(params)
+	if error_hash['error'] == 5
+		error_hash.to_json
+	else
+#    begin
+		query = "SELECT SO.s_title, SO.popularity, SO.so_id, Artist.name, Artist.ar_id FROM (SELECT DISTINCT so_id FROM PlaylistSong WHERE pl_id = '#{params['pl_id']}') AS PS NATURAL JOIN (SELECT Song.title AS s_title, Song.popularity, Song.so_id, Song.al_id FROM Song) AS SO NATURAL JOIN (SELECT Album.al_id, Album.ar_id FROM Album) AS AL NATURAL JOIN Artist"
+		songs = DB[query]
+		playlist = []
+		for song in songs
+			playlist << {:title => song[:s_title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
+		end
+		JSON.generate(playlist)
+#		rescue
+#			playlist = [{:title => '1000 Nights', :artist => 'FRENSHIP', :artist_id => 12, :duration => 164, :song_key => 567}];
+#			JSON.generate(playlist)
+#		end
+	end
 end
+
 #get all playlist information from usr_id
 get '/getListPlaylist/:usr_id' do
-	#get all the playlists for a specific user
-	puts params['usr_id']
-	playlist = getAllPlaylistsForUser(params['usr_id'])
-	JSON[playlist]
+	error_hash = checkToken(params)
+	if error_hash['error'] == 5
+		error_hash.to_json
+	else
+		#get all the playlists for a specific user
+		puts params['usr_id']
+		playlist = getAllPlaylistsForUser(params['usr_id'])
+		JSON[playlist]
+	end
 end
+
 #get all the information about an artist given their id. We need the name, description, their albums, the songs in their albums and their respective ids
 get '/getArtistInformation/:ar_id' do
-	songs = DB["SELECT *, Album.title AS Atitle FROM Album NATURAL JOIN Artist JOIN Song ON(Album.al_id = Song.al_id) WHERE ar_id = '#{params['ar_id']}'"].as_hash(:so_id)
-	# wew kids, get ready for some crazy formatting :yikes:
-	# @sacheth I hope this is how you want it
+	error_hash = checkToken(params)
+	if error_hash['error'] == 5
+		error_hash.to_json
+	else
+		songs = DB["SELECT *, Album.title AS Atitle FROM Album NATURAL JOIN Artist JOIN Song ON(Album.al_id = Song.al_id) WHERE ar_id = '#{params['ar_id']}'"].as_hash(:so_id)
+		# wew kids, get ready for some crazy formatting :yikes:
+		# @sacheth I hope this is how you want it
 
-	# use just the first song (it breaks after the first iteration)
-	# to set up the artist_info object
-	artist_info = {}
-	songs.each do |key, stuff|
-		artist_info = {
-			'artistInfo':[
-				{
-					'Name' => stuff[:name],
-					'artist_id' => stuff[:ar_id],
-					'Description' => stuff[:description],
-					'Albums' => []
-				}
-			]
-		}
-		break
-	end
+		# use just the first song (it breaks after the first iteration)
+		# to set up the artist_info object
+		artist_info = {}
+		songs.each do |key, stuff|
+			artist_info = {
+				'artistInfo':[
+					{
+						'Name' => stuff[:name],
+						'artist_id' => stuff[:ar_id],
+						'Description' => stuff[:description],
+						'Albums' => []
+					}
+				]
+			}
+			break
+		end
 
-	# now populate that object with albums and songs
-	songs.each do |key, stuff|
-		# make sure to make a new album if the album isn't already listed
-		if(artist_info[:artistInfo][0]['Albums'].all? {|a| a['album_title'] != stuff[:Atitle]})
-			artist_info[:artistInfo][0]['Albums'] << {'album_title' => stuff[:Atitle],
-																			'songs': [{'songName' => stuff[:title],
-																									 'song_key' => stuff[:so_id],
-																									 'duration' => stuff[:popularity],
-																									 'ar_id' => stuff[:ar_id],
-																									 'artistName' => stuff[:name],
+		# now populate that object with albums and songs
+		songs.each do |key, stuff|
+			# make sure to make a new album if the album isn't already listed
+			if(artist_info[:artistInfo][0]['Albums'].all? {|a| a['album_title'] != stuff[:Atitle]})
+				artist_info[:artistInfo][0]['Albums'] << {'album_title' => stuff[:Atitle],
+																				'songs': [{'songName' => stuff[:title],
+																										 'song_key' => stuff[:so_id],
+																										 'duration' => stuff[:popularity],
+																										 'ar_id' => stuff[:ar_id],
+																										 'artistName' => stuff[:name],
 
-																									 }] }
-		else # if the album is listed, add the song to it
-			for i in 0...artist_info[:artistInfo][0]['Albums'].length
-				if artist_info[:artistInfo][0]['Albums'][i]['album_title'] == stuff[:Atitle]
-					artist_info[:artistInfo][0]['Albums'][i][:songs] << {'songName' => stuff[:title],
-																											'song_key' => stuff[:so_id],
-																											'duration' => stuff[:popularity],
-	 																									 'ar_id' => stuff[:ar_id],
-	 																									 'artistName' => stuff[:name],
-																											}
+																										 }] }
+			else # if the album is listed, add the song to it
+				for i in 0...artist_info[:artistInfo][0]['Albums'].length
+					if artist_info[:artistInfo][0]['Albums'][i]['album_title'] == stuff[:Atitle]
+						artist_info[:artistInfo][0]['Albums'][i][:songs] << {'songName' => stuff[:title],
+																												'song_key' => stuff[:so_id],
+																												'duration' => stuff[:popularity],
+		 																									 'ar_id' => stuff[:ar_id],
+		 																									 'artistName' => stuff[:name],
+																												}
+					end
 				end
 			end
 		end
-	end
 
-	return JSON[artist_info]
+		return JSON[artist_info]
+	end
 end
+
 #get the list of all of usr_id's friends
 get '/getListFriends/:usr_id' do
 	#get all the friends for a specific user
 end
+
 # get the queue of a user
 get '/queue/:usr_id' do
-
-	queue = getQueueForUser(params['usr_id'])
-	info = [:queue => queue]
-	JSON[info]
-
+	error_hash = checkToken(params)
+	if error_hash['error'] == 5
+		error_hash.to_json
+	else
+		queue = getQueueForUser(params['usr_id'])
+		info = {:queue => queue}
+		JSON[info.merge(error_hash)]
+	end
 end
+
 # get all of the information about a user
 get '/initialize/:usr_id' do
 	#This needs to get all of the information about a specific user based on the user id
-	username = getUserName(params['usr_id'])
-	playlist = getAllPlaylistsForUser(params['usr_id'])
-	friends = getAllFriendsForUser(params['usr_id'])
-	queue = getQueueForUser(params['usr_id'])
-	info = [:username => username, :playlist => playlist, :friends => friends, :queue => queue]
-	JSON[info]
+	error_hash = checkToken(params)
+	if error_hash['error'] == 5
+		error_hash.to_json
+	else
+		username = getUserName(params['usr_id'])
+		playlist = getAllPlaylistsForUser(params['usr_id'])
+		friends = getAllFriendsForUser(params['usr_id'])
+		queue = getQueueForUser(params['usr_id'])
+		info = {:username => username, :playlist => playlist, :friends => friends, :queue => queue}
+		JSON[info.merge(error_hash)]
+	end
 end
 
 post '/signup' do
@@ -119,9 +152,8 @@ post '/signup' do
 end
 
 post '/login' do
-	my_has = JSON.parse(request.body.read)
-	user = my_has['username']
-	pass = my_has['password']
+	user = params['username']
+	pass = params['password']
 	query = "SELECT * FROM User WHERE User.username = '#{user}' AND User.password = '#{pass}'"
 	if DB[query].count == 1
 	  dataset = DB[query]
@@ -146,14 +178,6 @@ post '/addFriend' do
 	rescue
 		info=[:error => 1]
 	end
-end
-
-post '/something_secure/' do # someome submits a form to /something_secure using post
-    # there's a field in a form where the name in the form tag is post_from_html_key
-    puts params['post_from_html_key'] # <input type='password' name='post_from_html_key' />
-    # puts prints stuff out to the serve console, nothing is returned to the user
-    # if you want to return something, do:
-    #json {'keyyy': 'a test value'} # send a hash (dict) over json
 end
 
 post '/addSongToPlaylist' do
@@ -196,4 +220,15 @@ def getAllFriendsForUser(user_id)
 	friends = []
 	friend_tupule.each {|x| friends.push(x)}
 	return friends
+end
+
+def checkToken(params)
+	if params['token1'] and params['token2']
+	    username = Base64.decode64(params['token1'])
+	    password = Base64.decode64(params['token2'])
+	    if DB["SELECT * FROM User WHERE User.username = '#{username}' AND User.password = '#{password}'"].count == 1
+	        return {'error'=>0}
+	    end
+    end
+    return {'error'=>5}
 end
