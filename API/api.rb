@@ -120,6 +120,29 @@ post '/createPlaylist' do
 	end
 	JSON[info]
 end
+
+# search for songs and users
+get '/search/:term' do
+	term = params['term']
+	querySongs = "SELECT *, Album.title AS atitle FROM (SELECT * FROM Song WHERE title LIKE '%#{term}%') AS so NATURAL JOIN Artist JOIN Album ON(so.al_id = Album.al_id)"
+	queryUsers = "SELECT * FROM User WHERE username LIKE '%#{term}%'"
+	begin
+		songsf = DB[querySongs]
+		usersf = DB[queryUsers]
+		songs = []
+		users = []
+		for each song in songsf do
+			songs << {:title => song[:s_title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
+		end
+		for each user in usersf do
+			users << {:username => user[:username], :us_id => user[:us_id]}
+		end
+		info = [:error=>0, :songs=>songs, :users=>users]
+	rescue
+		info = [:error=>1]
+	end
+end
+
 # get the queue of a user
 get '/queue/:usr_id' do
 	error_hash = checkToken(params)
