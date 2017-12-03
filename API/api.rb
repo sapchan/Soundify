@@ -131,10 +131,10 @@ get '/search/:term' do
 		usersf = DB[queryUsers]
 		songs = []
 		users = []
-		for each song in songsf do
+		songsf.each do |key, song|
 			songs << {:title => song[:s_title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
 		end
-		for each user in usersf do
+		usersf.each do |key,user|
 			users << {:username => user[:username], :us_id => user[:us_id]}
 		end
 		info = [:error=>0, :songs=>songs, :users=>users]
