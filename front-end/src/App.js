@@ -27,6 +27,7 @@ class App extends Component {
       queueView: true,
       friendView: false,
       artistView: false,
+      searchView: false,
       curSong: 1,
       token1: '',
       token2: ''
@@ -167,7 +168,8 @@ class App extends Component {
     this.setState({
       queueView: true,
       friendView: false,
-      artistView: false
+      artistView: false,
+      searchView: false
     })
   }
 
@@ -176,7 +178,8 @@ class App extends Component {
     this.setState({
       queueView: false,
       friendView: true,
-      artistView: false
+      artistView: false,
+      searchView: false
     });
   }
 
@@ -185,7 +188,18 @@ class App extends Component {
     this.setState({
       queueView: false,
       friendView: false,
-      artistView: true
+      artistView: true,
+      searchView: false
+    })
+  }
+
+  // change to search views
+  changeToSearch() {
+    this.setState({
+      queueView: false,
+      friendView: false,
+      artistView: false,
+      searchView: true
     })
   }
 

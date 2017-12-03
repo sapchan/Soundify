@@ -13,9 +13,11 @@ class Viewer_Container extends Component {
       playerView: true,
       friendView: false,
       artistView: false,
+      searchView: false,
       friendsPlaylist: undefined,
       artist_info: undefined,
-      playlist: undefined
+      playlist: undefined,
+      search_information: undefined
     };
     this.updateCurrentSong = this.updateCurrentSong.bind(this);
     this.viewFriendsPlaylist = this.viewFriendsPlaylist.bind(this);
@@ -29,6 +31,8 @@ class Viewer_Container extends Component {
     let friendsPlaylist = this.props.friends_playlist;
     let artist_info = this.props.artist_info;
     let playlist = this.props.playlist;
+    let searchView = this.props.searchView;
+    let search_information = this.props.search_information;
     this.setState({
       data: data,
       playerView: queueView,
@@ -36,7 +40,9 @@ class Viewer_Container extends Component {
       artistView: artistView,
       friendsPlaylist: friendsPlaylist,
       artist_info: artist_info,
-      playlist: playlist
+      playlist: playlist,
+      searchView: searchView,
+      search_information: search_information,
     });
   }
 
@@ -47,7 +53,9 @@ class Viewer_Container extends Component {
        this.props.artistView !== nextProps.artistView ||
        this.props.friends_playlist !== nextProps.friends_playlist ||
        this.props.artist_info !== nextProps.artist_info ||
-       this.props.playlist !== nextProps.playlist
+       this.props.playlist !== nextProps.playlist ||
+       this.props.searchView !== nextProps.searchView ||
+       this.props.search_information !== nextProps.search_information
     ) {
       this.setState({
         data: nextProps.data,
@@ -56,7 +64,8 @@ class Viewer_Container extends Component {
         artistView: nextProps.artistView,
         friendsPlaylist: nextProps.friends_playlist,
         artist_info: nextProps.artist_info,
-        playlist: nextProps.playlist
+        playlist: nextProps.playlist,
+        search_information: nextProps.search_information
       })
     }
   }
@@ -166,7 +175,7 @@ class Viewer_Container extends Component {
           </Grid>
         </div>
       );
-    } else {
+    } else if(this.state.artistView == true) {
       let info = this.state.artist_info;
       console.log(this.state);
       let artistName = info[0].Name;
@@ -204,6 +213,31 @@ class Viewer_Container extends Component {
           </Grid>
         </div>
       );
+    } else if(this.state.searchView == true) {
+      return(
+        <div className="Viewer_Container">
+        <Grid fluid={true}>
+          <Row>
+            <div className="SearchBar">
+              <Form horizontal>
+                <Col sm={2}>
+                </Col>
+                <Col sm={8}>
+                  <FormControl bsSize={'lg'} type="text" placeholder="Search" />
+                </Col>
+                <Col sm={2}>
+                </Col>
+              </Form>
+            </div>
+          </Row>
+          <Row>
+            <div className='Viewer_Queue'>
+              
+            </div>
+          </Row>
+          </Grid>
+        </div>
+      )
     }
   }
 }
