@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PlaylistItem_Component from './PlaylistItem_Component';
-import { Grid, Button, Row, Col, Panel, FormControl } from 'react-bootstrap';
+import { Grid, Button, Row, Col, Panel, FormControl, Form, FormGroup } from 'react-bootstrap';
 
 class PlayList_Container extends Component {
   constructor(props) {
@@ -65,10 +65,12 @@ class PlayList_Container extends Component {
           <a onClick={this.handleClick} className="playlist_item"><h4>Queue</h4></a>
           <hr></hr>
           <h4>Your Playlists</h4>
-          <Row>
-            <FormControl type="text" onChange={this.text} />
-            <Button bsSize="small" onClick={this.createPlaylist}>+</Button>
-          </Row>
+          <Form inline={true}>
+            <FormGroup controlId="formInlineName">
+             <FormControl bsSize="small" type="text" onChange={this.text} />
+             <Button bsSize="small" onClick={this.createPlaylist}>+</Button>
+           </FormGroup>
+          </Form>
           <div>
             {this.state.playlists.map(function(d, i){
               return (<PlaylistItem_Component
@@ -78,7 +80,6 @@ class PlayList_Container extends Component {
                 onPlayListClick={this.send_PlayList_id_Up}
                 />)
             }.bind(this))}
-
           </div>
         </Grid>
       </div>

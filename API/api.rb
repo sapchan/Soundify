@@ -112,13 +112,15 @@ post '/createPlaylist' do
 	pl_name = my_has['pl_name']
 	pl_id = SecureRandom.uuid
 	begin
-		DB["INSERT INTO Playlist (pl_id, us_id, name) VALUES ('#{pl_id}', '#{user}', '#{pl_name}')"]
+		DB.run("INSERT INTO Playlist (pl_id, us_id, name) VALUES ('#{pl_id}', '#{user}', '#{pl_name}')")
 		playlists = getAllPlaylistsForUser(user)
 		info = [:error=>0, :playlists=>playlists]
+		JSON[info]
 	rescue
 		info = [:error=>1]
+		JSON[info]
 	end
-	JSON[info]
+
 end
 # get the queue of a user
 get '/queue/:usr_id/:token1/:token2' do
@@ -168,7 +170,7 @@ post '/login' do
 	user = my_has['username']
 	pass = my_has['password']
 	query = "SELECT * FROM User WHERE User.username = '#{user}' AND User.password = '#{pass}'"
-	if DB[query].count == 1
+	if DB[query].count != 0
 	  dataset = DB[query]
 	  us_id = dataset.map(:us_id)[0]
 	  { 'token1'=>Base64.encode64(user), 'token2'=>Base64.encode64(pass), 'us_id'=> us_id, 'flag' => true}.to_json

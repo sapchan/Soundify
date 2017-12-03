@@ -88,6 +88,7 @@ class App extends Component {
     let location = 'http://localhost:4567/playlist/' + playList_id + '/' + this.state.token1 + '/' + this.state.token2;
     axios.get(location).then(function (response) {
       let queue = response.data;
+      console.log(response.data);
       this.setState({
         queue: queue
       });
@@ -236,8 +237,9 @@ class App extends Component {
           token1: token1,
           token2: token2
         });
+        this.Initialize(us_id);
       }
-      this.Initialize(us_id);
+
     }.bind(this));
   }
 
@@ -306,12 +308,11 @@ class App extends Component {
       us_id: this.state.user_id,
       pl_name: name
     }).then(function(response){
-        let error = response.data.error;
-        console.log(error)
+        let error = response.data[0].error;
         if(error == 0) {
-          let playlist = response.data.playlist;
+          let playlist = response.data[0].playlists;
           this.setState({
-            playlist: playlist
+            playlist: playlist,
           })
         } else {
           this.logout();
