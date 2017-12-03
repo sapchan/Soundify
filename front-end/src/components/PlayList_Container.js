@@ -50,7 +50,7 @@ class PlayList_Container extends Component {
           <hr></hr>
           <a onClick={this.handleClick} className="playlist_item"><h4>Queue</h4></a>
           <hr></hr>
-          <h4>Your Playlists</h4>
+          <h4>Your Playlists</h4> <Button onClick={this.props.createPlaylist}>+</Button>
           <div>
             {this.state.playlists.map(function(d, i){
               return (<PlaylistItem_Component
