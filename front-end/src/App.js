@@ -354,6 +354,7 @@ class App extends Component {
                   playerView = {this.state.queueView}
                   friendView = {this.state.friendView}
                   artistView = {this.state.artistView}
+                  searchView = {false}
                   data={this.state.queue}
                   artist_info = {this.state.artist_info}
                   friends_playlist = {this.state.friends_playlist}
