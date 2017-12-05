@@ -173,6 +173,16 @@ get '/initialize/:usr_id/:token1/:token2' do
 
 end
 
+post '/deletePlaylist' do
+	my_has = JSON.parse(request.body.read)
+	pl_id = my_has['pl_id']
+	begin
+		query = "DELETE FROM Playlist WHERE pl_id = '#{pl_id}'"
+		DB.run(query)		
+	rescue
+	end
+end
+
 post '/signup' do
 		us_id = SecureRandom.uuid
 		my_has = JSON.parse(request.body.read)
@@ -249,14 +259,14 @@ def getUserName(user_id)
 end
 
 def getAllPlaylistsForUser(user_id)
-	playlist_name_tupule = DB["SELECT Playlist.pl_id, Playlist.name FROM Playlist WHERE Playlist.us_id = '#{user_id}'"]
+	playlist_name_tupule = DB["SELECT Playlist.pl_id, Playlist.name FROM Playlist WHERE Playlist.us_id = '#{user_id}' ORDER BY Playlist.name"]
 	playlist = []
 	playlist_name_tupule.each { |x|  playlist.push(x)}
 	return playlist
 end
 
 def getAllFriendsForUser(user_id)
-	query = "SELECT username, us_id FROM User WHERE us_id IN (SELECT follower FROM Following WHERE followed = '#{user_id}')"
+	query = "SELECT username, us_id FROM User WHERE us_id IN (SELECT follower FROM Following WHERE followed = '#{user_id}') ORDER BY username"
 	friend_tupule = DB[query]
 	friends = []
 	friend_tupule.each {|x| friends.push(x)}

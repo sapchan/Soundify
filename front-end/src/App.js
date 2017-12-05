@@ -49,6 +49,7 @@ class App extends Component {
     this.addSongToPlaylist = this.addSongToPlaylist.bind(this);
     this.signup = this.signup.bind(this);
     this.createPlaylist = this.createPlaylist.bind(this);
+    this.delete = this.delete.bind(this);
   }
 
   // This initializes all of the information when a user logs in based on what their user id is.
@@ -75,7 +76,7 @@ class App extends Component {
 
   // This gets all of a users's playlists names and ids
   getYourPlaylists() {
-    let location = 'http://localhost:4567/getListPlaylist/' + this.state.user_id;
+    let location = 'http://localhost:4567/getListPlaylist/' + this.state.user_id + '/' + this.state.token1 + '/' + this.state.token2;
     axios.get(location).then(function (response) {
       let playlist = response.data;
       this.setState({
@@ -340,6 +341,17 @@ class App extends Component {
     }.bind(this));
   }
 
+  delete(pl_id){
+    let location = 'http://localhost:4567/deletePlaylist';
+    console.log(pl_id)
+    axios.post(location, {
+      pl_id: pl_id
+    }).then(function(response){
+        this.getYourPlaylists(this.state.user_id);
+
+    }.bind(this))
+  }
+
   render() {
     if(this.state.login == true) {
       return (
@@ -353,6 +365,7 @@ class App extends Component {
               callback={this.getPlaylist}
               getQueue={this.getQueue}
               createPlaylist={this.createPlaylist}
+              delete={this.delete}
               />
             </Col>
             <Col md={9}>

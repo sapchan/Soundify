@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PlayList_Container from './PlayList_Container';
+import '../assets/main.css';
 import { Grid, Button, Row, Col, Panel, Button as btn } from 'react-bootstrap';
 
 class PlaylistItem_Component extends Component {
@@ -26,12 +27,18 @@ class PlaylistItem_Component extends Component {
   }
 
   render() {
+    const deleteStyle = {
+      color: 'red'
+    }
     return (
-      <Grid fluid={true}>
         <Row>
-          <a onClick={this.handleClick} className="playlist_item"><p>{this.state.title}</p></a>
+          <Col md={10}>
+              <a onClick={this.handleClick}>{this.state.title}</a>
+          </Col>
+          <Col md={2}>
+              <a onClick={() => { this.props.delete(this.state.key) }} ><span style={deleteStyle}>x</span></a>
+          </Col>
         </Row>
-      </Grid>
     );
   }
 

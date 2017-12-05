@@ -97,7 +97,7 @@ class Viewer_Container extends Component {
         search_information: text,
         searchView: true,
       });
-      if (text.length > 5) {
+      if (text.length > 3) {
         this.getSearchResults(text);
       }
     }

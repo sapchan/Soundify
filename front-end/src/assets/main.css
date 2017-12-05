@@ -9,6 +9,7 @@
 
 .playlist_item {
   border-radius: 0 !important;
+  display: inline !important;
 }
 
 .SearchBar {

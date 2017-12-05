@@ -29,9 +29,11 @@ class PlayList_Container extends Component {
     if( this.props.data !== nextProps.data ||
         this.props.name !== nextProps.name
     ) {
+      console.log(nextProps.data);
       this.setState({
         playlists: nextProps.data,
-        name: nextProps.name
+        name: nextProps.name,
+
       })
     }
   }
@@ -71,13 +73,14 @@ class PlayList_Container extends Component {
              <Button bsSize="small" onClick={this.createPlaylist}>+</Button>
            </FormGroup>
           </Form>
-          <div>
+          <div className="playlist_item">
             {this.state.playlists.map(function(d, i){
               return (<PlaylistItem_Component
-                id={i}
+                key={d['pl_id']}
                 playlistId={d['pl_id']}
                 playListName = {d['name']}
                 onPlayListClick={this.send_PlayList_id_Up}
+                delete={this.props.delete}
                 />)
             }.bind(this))}
           </div>
