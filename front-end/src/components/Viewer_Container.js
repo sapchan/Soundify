@@ -110,14 +110,22 @@ class Viewer_Container extends Component {
             <div className='Viewer_Queue'>
               <h3> Search Results for  {this.state.search_information}</h3>
               <hr></hr>
+              <h5>People: </h5>
               <Table striped={true} responsive={true}>
                 <thead>
                   <tr>
-
                   </tr>
                 </thead>
                 <tbody>
-
+                </tbody>
+              </Table>
+              <h5>Songs: </h5>
+              <Table striped={true} responsive={true}>
+                <thead>
+                  <tr>
+                  </tr>
+                </thead>
+                <tbody>
                 </tbody>
               </Table>
             </div>
