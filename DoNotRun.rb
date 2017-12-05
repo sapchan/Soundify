@@ -25,7 +25,7 @@ albums=[{:al_id => pureheroine, :title => "Pure Heroine", :ar_id => lorde, :date
         {:al_id => vampweek, :title => "Vampire Weekend", :ar_id => vw, :date => 2008},
         {:al_id => contra, :title => "Contra", :ar_id => vw, :date => 2010},
         {:al_id => mvotc, :title => "Modern Vampires of the City", :ar_id => vw, :date => 2013},
-        {:al_id => gold, :title => "Gold: Greatest Hits", :ar_id => lorde, :date => 2002}]
+        {:al_id => gold, :title => "Gold: Greatest Hits", :ar_id => abba, :date => 2002}]
 
 songs= [{:so_id => SecureRandom.uuid, :title => "400 Lux", :ar_id => lorde, :al_id => pureheroine, :popularity => 0.8, :link => "www.google.com", :genre => "Alternative"},
         {:so_id => SecureRandom.uuid, :title => "Royals", :ar_id => lorde, :al_id => pureheroine, :popularity => 0.4, :link => "www.google.com", :genre => "Alternative"},
