@@ -100,11 +100,6 @@ get '/getArtistInformation/:ar_id/:token1/:token2' do
 	end
 end
 
-#get the list of all of usr_id's friends
-get '/getListFriends/:usr_id' do
-	#get all the friends for a specific user
-end
-
 # create new playlists
 post '/createPlaylist' do
 	my_has = JSON.parse(request.body.read)
@@ -125,23 +120,26 @@ end
 
 # search for songs and users
 get '/search/:term' do
+	puts 'hey'
 	term = params['term']
-	querySongs = "SELECT *, Album.title AS atitle FROM (SELECT * FROM Song WHERE title LIKE ?) AS so NATURAL JOIN Artist JOIN Album ON(so.al_id = Album.al_id)"
-	queryUsers = "SELECT * FROM User WHERE username LIKE ?"
+	querySongs = "SELECT DISTINCT so.t as title, so.popularity, so.so_id, Artist.name, Artist.ar_id FROM (SELECT so_id, al_id,title as t, popularity FROM Song WHERE title LIKE '%#{term}%') AS so NATURAL JOIN Album NATURAL JOIN Artist"
+	queryUsers = "SELECT DISTINCT * FROM User WHERE username LIKE '%#{term}%'"
 	begin
-		songsf = DB[querySongs, "%#{term}%"]
-		usersf = DB[queryUsers, "%#{term}%"]
+		songsf = DB[querySongs]
+		usersf = DB[queryUsers]
 		songs = []
 		users = []
-		songsf.each do |key, song|
-			songs << {:title => song[:s_title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
+		songsf.each do |song|
+			songs << {:title => song[:title], :artist => song[:name], :artist_id => song[:ar_id], :duration => song[:popularity], :song_key => song[:so_id]}
 		end
-		usersf.each do |key,user|
+		usersf.each do |user|
 			users << {:username => user[:username], :us_id => user[:us_id]}
 		end
 		info = [:error=>0, :songs=>songs, :users=>users]
+		JSON[info]
 	rescue
 		info = [:error=>1]
+		JSON[info]
 	end
 end
 
@@ -211,15 +209,16 @@ post '/addFriend' do
 	my_has = JSON.parse(request.body.read)
 	usr_id = my_has['usr_id']
 	friend = my_has['friend']
-	begin
-		query = "INSERT INTO Following (follower, followed) VALUES ('#{params['usr_id']}', '#{params['friend']}')" ##### we need to know who the person is who is initiating the follow
-		DB[query]
-		friends = getAllFriendsForUser(params['usr_id'])
+	#begin ##### we need to know who the person is who is initiating the follow
+		DB.run("INSERT INTO Following (followed, follower) VALUES ('#{usr_id}', '#{friend}')")
+		friends = getAllFriendsForUser(usr_id)
 		info = [:error => 0, :friends => friends]
+		puts info
 		JSON[info]
-	rescue
-		info=[:error => 1]
-	end
+
+	#rescue
+	#	info=[:error => 1]
+	#end
 end
 
 post '/addSongToPlaylist' do

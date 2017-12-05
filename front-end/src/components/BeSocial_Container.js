@@ -18,7 +18,7 @@ class BeSocial_Container extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.props.data != nextProps.data) {
+    if(this.props.data !== nextProps.data) {
       this.setState({
         data: nextProps.data
       })
@@ -27,7 +27,9 @@ class BeSocial_Container extends Component {
 
   componentWillMount(){
     let data = this.props.data;
-    this.setState({ data });
+    this.setState({
+      data: data
+     });
   }
   render() {
     return (

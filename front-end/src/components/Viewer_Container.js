@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Viewer_Queue_Component from './Viewer_Queue_Component';
 import Viewer_Friend_Component from './Viewer_Friend_Component';
 import Viewer_Artist_Container from './Viewer_Artist_Container';
+import axios from 'axios';
 import Search_Bar from './Search_Bar';
 import '../assets/main.css';
 import { Grid, Button, Row, Col, Panel, Table, thead,tbody, Form, FormControl } from 'react-bootstrap';
@@ -19,10 +20,13 @@ class Viewer_Container extends Component {
       artist_info: undefined,
       playlist: undefined,
       search_information: undefined,
+      search_from_api_songs: [],
+      search_from_api_users: []
     };
     this.updateCurrentSong = this.updateCurrentSong.bind(this);
     this.viewFriendsPlaylist = this.viewFriendsPlaylist.bind(this);
     this.change_in_search = this.change_in_search.bind(this);
+    this.getSearchResults = this.getSearchResults.bind(this);
   }
 
   componentWillMount(){
@@ -92,8 +96,23 @@ class Viewer_Container extends Component {
       this.setState({
         search_information: text,
         searchView: true,
-      })
+      });
+      if (text.length > 5) {
+        this.getSearchResults(text);
+      }
     }
+  }
+
+  getSearchResults(text) {
+    let location = 'http://localhost:4567/search/' + text ;
+    axios.get(location).then(function (response) {
+        let search_from_api_songs = response.data[0].songs;
+        let search_from_api_users = response.data[0].users;
+        this.setState({
+          search_from_api_songs: search_from_api_songs,
+          search_from_api_users: search_from_api_users
+        })
+    }.bind(this));
   }
 
   render() {
@@ -114,18 +133,51 @@ class Viewer_Container extends Component {
               <Table striped={true} responsive={true}>
                 <thead>
                   <tr>
+                    <th>Person Name</th>
+                    <th>Follow</th>
                   </tr>
                 </thead>
                 <tbody>
+                  {this.state.search_from_api_users.map(function(s,i) {
+                    return(
+                      <tr>
+                        <td>{s.username}</td>
+                        <td><Button onClick={() => { this.props.addFriend(s.us_id) }}>
+                          +
+                        </Button></td>
+                      </tr>
+                    )
+                  }.bind(this))}
                 </tbody>
               </Table>
               <h5>Songs: </h5>
               <Table striped={true} responsive={true}>
                 <thead>
                   <tr>
+                    <th>Song</th>
+                    <th>Artist</th>
+                    <th>Popularity</th>
+                    <th>Options</th>
                   </tr>
                 </thead>
                 <tbody>
+                  {this.state.search_from_api_songs.map(function(s, i)
+                    {
+                      return (
+                        <Viewer_Queue_Component
+                                key={i}
+                                songID={s.song_key}
+                                song={s.title}
+                                artist={s.artist}
+                                artist_id={s.artist_id}
+                                duration={s.duration}
+                                callback={this.updateCurrentSong}
+                                onArtistClick={this.props.onArtistClick}
+                                playlist={this.state.playlist}
+                                addSongToPlaylist={this.props.addSongToPlaylist}
+                              />);
+                    }.bind(this)
+                  )}
                 </tbody>
               </Table>
             </div>
@@ -192,6 +244,7 @@ class Viewer_Container extends Component {
                 ar_id={ar_id}
                 callback={this.props.update}
                 onArtistClick={this.props.onArtistClick}
+                playlist={this.props.playlist}
               />
             </div>
           </Row>

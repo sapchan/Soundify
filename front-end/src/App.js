@@ -93,7 +93,7 @@ class App extends Component {
       this.setState({
         queue: queue
       });
-      if(this.state.queueView != true) {
+      if(this.state.queueView !== true) {
         this.changeToPlaylist();
       }
     }.bind(this));
@@ -107,7 +107,7 @@ class App extends Component {
       this.setState({
         queue: queue
       });
-      if(this.state.queueView != true) {
+      if(this.state.queueView !== true) {
         this.changeToPlaylist();
       }
     }.bind(this));
@@ -176,8 +176,8 @@ class App extends Component {
   // change all views to friend views
   changeToFriend(){
     this.setState({
-      queueView: false,
       friendView: true,
+      queueView: false,
       artistView: false,
       searchView: false
     });
@@ -186,9 +186,9 @@ class App extends Component {
   // change all views to artist view
   changeToArtist(){
     this.setState({
+      artistView: true,
       queueView: false,
       friendView: false,
-      artistView: true,
       searchView: false
     })
   }
@@ -196,21 +196,27 @@ class App extends Component {
   // change to search views
   changeToSearch() {
     this.setState({
+      searchView: true,
       queueView: false,
       friendView: false,
       artistView: false,
-      searchView: true
     })
   }
 
   // function to add the friend given the friend's username
-  addFriend(userName) {
-    let location = 'http://localhost:4567/addFriend/' + this.state.user_id;
+  addFriend(us_id) {
+    let location = 'http://localhost:4567/addFriend';
     axios.post(location, {
-      friend:userName
+      usr_id:this.state.user_id,
+      friend:us_id
     }).then(function(response){
-      this.getListOfFriends(this.state.user_id);
-    }).bind(this);
+      let information = response.data[0];
+      let friends = information['friends'];
+      this.setState({
+        friends: friends
+      })
+      //console.log('a')
+    }.bind(this));
   }
 
   // displays the sogns depending on the playlist id
@@ -363,6 +369,7 @@ class App extends Component {
                   onArtistClick={this.getArtistInformation}
                   playlist={this.state.playlist}
                   addSongToPlaylist={this.addSongToPlaylist}
+                  addFriend={this.addFriend}
                 />
             </Col>
             <Col md={1}>

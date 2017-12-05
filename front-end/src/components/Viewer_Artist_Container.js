@@ -65,6 +65,7 @@ class Viewer_Artist_Container extends Component {
                       </thead>
                       <tbody>
                   {bla.map(function(s,j) {
+                    console.log(s);
                     return(
                       <Viewer_Queue_Component
                         key={j}
@@ -75,6 +76,7 @@ class Viewer_Artist_Container extends Component {
                         duration={s.duration}
                         callback={this.props.callback}
                         onArtistClick={this.props.onArtistClick}
+                        playlist={this.props.playlist}
                       />
                   );}.bind(this)
                     )}
