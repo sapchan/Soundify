@@ -122,7 +122,7 @@ end
 get '/search/:term' do
 	puts 'hey'
 	term = params['term']
-	querySongs = "SELECT DISTINCT so.t as title, so.popularity, so.so_id, Artist.name, Artist.ar_id FROM (SELECT so_id, al_id,title as t, popularity FROM Song WHERE title LIKE '%#{term}%') AS so NATURAL JOIN Album NATURAL JOIN Artist"
+	querySongs = "SELECT DISTINCT so.t as title, so.popularity, so.so_id, Artist.name, Artist.ar_id FROM ((SELECT so_id, al_id,title as t, popularity FROM Song WHERE title LIKE '%#{term}%') UNION (SELECT so_id, al_id,title as t, popularity FROM Song NATURAL JOIN Artist WHERE name LIKE '%#{term}%')) as so NATURAL JOIN Album NATURAL JOIN Artist"
 	queryUsers = "SELECT DISTINCT * FROM User WHERE username LIKE '%#{term}%'"
 	begin
 		songsf = DB[querySongs]
@@ -178,7 +178,7 @@ post '/deletePlaylist' do
 	pl_id = my_has['pl_id']
 	begin
 		query = "DELETE FROM Playlist WHERE pl_id = '#{pl_id}'"
-		DB.run(query)		
+		DB.run(query)
 	rescue
 	end
 end
