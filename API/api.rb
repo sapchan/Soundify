@@ -122,7 +122,7 @@ end
 get '/search/:term' do
 	puts 'hey'
 	term = params['term']
-	querySongs = "SELECT DISTINCT so.t as title, so.popularity, so.so_id, Artist.name, Artist.ar_id FROM ((SELECT so_id, al_id,title as t, popularity FROM Song WHERE title LIKE '%#{term}%') UNION (SELECT so_id, al_id,title as t, popularity FROM Song NATURAL JOIN Artist WHERE name LIKE '%#{term}%')) as so NATURAL JOIN Album NATURAL JOIN Artist"
+	querySongs = "SELECT DISTINCT so.t as title, so.popularity, so.so_id, Artist.name, Artist.ar_id FROM ((SELECT so_id, al_id,title as t, popularity FROM Song WHERE title LIKE '%#{term}%') UNION (SELECT so_id, Song.al_id, Song.title as t, popularity FROM Song JOIN Album ON(Song.al_id = Album.al_id) NATURAL JOIN Artist WHERE Artist.name LIKE '%#{term}%')) AS so JOIN Album ON(so.al_id = Album.al_id) NATURAL JOIN Artist"
 	queryUsers = "SELECT DISTINCT * FROM User WHERE username LIKE '%#{term}%'"
 	begin
 		songsf = DB[querySongs]
